@@ -1,0 +1,1464 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aachen Bushof — Abfahrtsmonitor</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0d1117" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <style>
+      :root {
+        --bg-primary: #0d1117;
+        --bg-secondary: #161b22;
+        --bg-tertiary: #1c2129;
+        --bg-surface: #21262d;
+        --bg-hover: rgba(136, 198, 255, 0.04);
+
+        --border-default: #30363d;
+        --border-muted: #21262d;
+
+        --text-primary: #e6edf3;
+        --text-secondary: #8b949e;
+        --text-tertiary: #6e7681;
+
+        --color-success: #3fb950;
+        --color-warning: #d29922;
+        --color-danger: #f85149;
+        --color-info: #58a6ff;
+
+        --time-now: #f85149;
+        --time-soon: #d29922;
+        --time-later: #3fb950;
+
+        --gutter: 24px;
+        --row-height: 56px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "SF Pro Display",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .mono {
+        font-family:
+          ui-monospace, "SF Mono", "Cascadia Mono", "Segoe UI Mono",
+          "Roboto Mono", Menlo, Monaco, Consolas, monospace;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ─── Header Glow Line ─── */
+      .header-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--color-info),
+          var(--color-success),
+          var(--color-info)
+        );
+        background-size: 200% 100%;
+        animation: shimmer 4s ease-in-out infinite;
+        z-index: 100;
+      }
+
+      @keyframes shimmer {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      /* ─── Header ─── */
+      header {
+        background: linear-gradient(
+          180deg,
+          var(--bg-secondary) 0%,
+          var(--bg-primary) 100%
+        );
+        padding: 24px var(--gutter) 20px;
+        border-bottom: 1px solid var(--border-default);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header-left h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
+      }
+
+      .header-left .subtitle {
+        font-size: 0.8rem;
+        color: var(--text-tertiary);
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-weight: 400;
+      }
+
+      .header-right {
+        text-align: right;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      /* ─── Weather Widget ─── */
+      .weather-widget {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border-muted);
+        border-radius: 10px;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      .weather-widget.loaded {
+        opacity: 1;
+      }
+
+      .weather-icon {
+        font-size: 1.4rem;
+        line-height: 1;
+      }
+
+      .weather-temp {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        line-height: 1;
+      }
+
+      .weather-desc {
+        font-size: 0.65rem;
+        color: var(--text-tertiary);
+        line-height: 1.2;
+        max-width: 60px;
+      }
+
+      .clock-wrapper {
+        text-align: right;
+      }
+
+      .clock {
+        font-size: 2.8rem;
+        font-weight: 300;
+        color: var(--text-primary);
+        line-height: 1;
+        letter-spacing: 0.02em;
+      }
+
+      .clock-date {
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+        margin-top: 4px;
+        letter-spacing: 0.02em;
+      }
+
+      /* ─── Status Bar ─── */
+      .status-bar {
+        background: var(--bg-tertiary);
+        border-bottom: 1px solid var(--border-muted);
+      }
+
+      .status-bar-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 8px var(--gutter);
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+      }
+
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        display: inline-block;
+        flex-shrink: 0;
+      }
+
+      .status-dot.ok {
+        background: var(--color-success);
+        box-shadow: 0 0 4px var(--color-success);
+      }
+      .status-dot.error {
+        background: var(--color-danger);
+        box-shadow: 0 0 4px var(--color-danger);
+      }
+      .status-dot.loading {
+        background: var(--color-warning);
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .error-msg {
+        color: var(--color-danger);
+        margin-left: auto;
+        font-size: 0.7rem;
+      }
+
+      .refresh-info {
+        margin-left: auto;
+        font-size: 0.7rem;
+        color: var(--text-tertiary);
+      }
+
+      .refresh-progress {
+        height: 2px;
+        background: var(--border-muted);
+        overflow: hidden;
+      }
+
+      .refresh-progress-bar {
+        height: 100%;
+        background: var(--color-info);
+        width: 100%;
+        transform-origin: left;
+        transition: transform 1s linear;
+        opacity: 0.5;
+      }
+
+      /* ─── Filter Chips ─── */
+      .filter-bar {
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-muted);
+        overflow: hidden;
+      }
+
+      .filter-chips {
+        display: flex;
+        gap: 6px;
+        padding: 10px var(--gutter);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+
+      .filter-chips::-webkit-scrollbar {
+        display: none;
+      }
+
+      .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        border: 1px solid var(--border-default);
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: 0.72rem;
+        font-weight: 500;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        font-family: inherit;
+      }
+
+      .filter-chip:hover {
+        border-color: var(--text-tertiary);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .filter-chip.active {
+        border-color: var(--color-info);
+        background: rgba(88, 166, 255, 0.1);
+        color: var(--color-info);
+        box-shadow: 0 0 8px rgba(88, 166, 255, 0.15);
+      }
+
+      .filter-chip-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+
+      .filter-chip-all {
+        font-size: 0.7rem;
+        letter-spacing: 0.03em;
+      }
+
+      /* ─── Main Content ─── */
+      main {
+        padding: 0 var(--gutter) 80px;
+      }
+
+      .departures-header {
+        display: grid;
+        grid-template-columns: 72px 1fr 56px 100px 72px;
+        gap: 0;
+        padding: 14px 16px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-tertiary);
+        border-bottom: 1px solid var(--border-default);
+      }
+
+      .col-plat,
+      .col-time {
+        text-align: center;
+      }
+      .col-min {
+        text-align: right;
+      }
+
+      .departures-list {
+        position: relative;
+      }
+
+      /* ─── Group Labels ─── */
+      .departure-group-label {
+        padding: 12px 16px 6px;
+        font-size: 0.65rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-tertiary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .departure-group-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border-muted);
+      }
+
+      /* ─── Departure Row ─── */
+      .departure-row {
+        display: grid;
+        grid-template-columns: 72px 1fr 56px 100px 72px;
+        gap: 0;
+        align-items: center;
+        padding: 0 16px;
+        height: var(--row-height);
+        border-bottom: 1px solid var(--border-muted);
+        position: relative;
+        overflow: hidden;
+        transition: background 0.2s ease, opacity 0.3s ease;
+        animation: rowSlideIn 0.35s ease both;
+      }
+
+      .departure-row:hover {
+        background: var(--bg-hover);
+      }
+
+      .departure-row:nth-child(even of .departure-row) {
+        background: rgba(255, 255, 255, 0.008);
+      }
+      .departure-row:nth-child(even of .departure-row):hover {
+        background: var(--bg-hover);
+      }
+
+      @keyframes rowSlideIn {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes rowSlideOut {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+          max-height: var(--row-height);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(-30px);
+          max-height: 0;
+          padding-top: 0;
+          padding-bottom: 0;
+          border-bottom-width: 0;
+        }
+      }
+
+      .departure-row.imminent {
+        border-left: 3px solid var(--time-now);
+        padding-left: 13px;
+        background: rgba(248, 81, 73, 0.04);
+      }
+
+      .departure-row.schedule-only {
+        opacity: 0.65;
+      }
+
+      .departure-row.cancelled {
+        background: rgba(248, 81, 73, 0.06);
+        opacity: 0.7;
+      }
+
+      .departure-row.cancelled .destination {
+        text-decoration: line-through;
+        text-decoration-color: var(--color-danger);
+        color: var(--text-tertiary);
+      }
+
+      .departure-row.cancelled .line-badge {
+        opacity: 0.5;
+        filter: grayscale(40%);
+      }
+
+      .departure-row.filtered-out {
+        display: none;
+      }
+
+      /* ─── Line Badge ─── */
+      .line-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 28px;
+        padding: 0 10px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-align: center;
+        color: #fff;
+        background: var(--color-info);
+        line-height: 1;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.15),
+          0 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      /* ─── Destination ─── */
+      .destination {
+        font-weight: 500;
+        color: var(--text-primary);
+        font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 12px;
+      }
+
+      /* ─── Platform ─── */
+      .platform {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+      }
+
+      /* ─── Time Absolute ─── */
+      .time-abs {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        line-height: 1.3;
+      }
+
+      .time-scheduled-struck {
+        text-decoration: line-through;
+        color: var(--text-tertiary);
+        font-size: 0.7rem;
+      }
+
+      .time-realtime {
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .realtime-dot {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--color-success);
+        box-shadow: 0 0 3px var(--color-success);
+        flex-shrink: 0;
+      }
+
+      .schedule-icon {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        border: 1px solid var(--text-tertiary);
+        flex-shrink: 0;
+      }
+
+      .delay-badge {
+        display: inline-block;
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: var(--color-danger);
+        background: rgba(248, 81, 73, 0.12);
+        padding: 1px 4px;
+        border-radius: 3px;
+        line-height: 1.2;
+      }
+
+      /* ─── Minutes Remaining ─── */
+      .time-remaining {
+        text-align: right;
+        font-weight: 700;
+        font-size: 1.3rem;
+        line-height: 1;
+      }
+
+      .min-label {
+        font-size: 0.65rem;
+        font-weight: 400;
+        color: var(--text-tertiary);
+        margin-left: 1px;
+      }
+
+      .time-later {
+        color: var(--time-later);
+      }
+      .time-soon {
+        color: var(--time-soon);
+      }
+
+      .time-now-badge {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #fff;
+        background: var(--time-now);
+        padding: 3px 8px;
+        border-radius: 4px;
+        animation: nowPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes nowPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 0 6px rgba(248, 81, 73, 0);
+        }
+      }
+
+      .cancelled-badge {
+        display: inline-block;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: #fff;
+        background: var(--color-danger);
+        padding: 3px 8px;
+        border-radius: 4px;
+        letter-spacing: 0.02em;
+      }
+
+      /* ─── Row Progress Bar ─── */
+      .row-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        border-radius: 0 1px 1px 0;
+        transition: width 1s linear, background 1s linear;
+        opacity: 0.6;
+      }
+
+      .departure-row.cancelled .row-progress {
+        display: none;
+      }
+
+      /* ─── Loading & Empty ─── */
+      .empty-msg {
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--text-tertiary);
+        font-size: 1rem;
+      }
+
+      .loading-spinner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 80px 20px;
+        gap: 16px;
+        color: var(--text-tertiary);
+        font-size: 0.85rem;
+      }
+
+      .loading-spinner::before {
+        content: "";
+        display: block;
+        width: 32px;
+        height: 32px;
+        border: 2px solid var(--border-default);
+        border-top-color: var(--color-info);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      .loading-spinner::after {
+        content: "Abfahrten werden geladen...";
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ─── Minute Bump Animation ─── */
+      @keyframes minuteBump {
+        0% { transform: scale(1); }
+        30% { transform: scale(1.15); }
+        100% { transform: scale(1); }
+      }
+
+      .minute-bump {
+        animation: minuteBump 0.3s ease;
+      }
+
+      /* ─── Footer ─── */
+      footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 24px var(--gutter) 10px;
+        background: linear-gradient(
+          180deg,
+          transparent 0%,
+          var(--bg-primary) 40%
+        );
+        font-size: 0.7rem;
+        color: var(--text-tertiary);
+        text-align: center;
+        pointer-events: none;
+      }
+
+      footer span {
+        pointer-events: auto;
+      }
+
+      /* ─── Responsive: Tablet ─── */
+      @media (max-width: 768px) {
+        :root {
+          --gutter: 16px;
+          --row-height: 52px;
+        }
+        .clock {
+          font-size: 2.2rem;
+        }
+        .header-left h1 {
+          font-size: 1.3rem;
+        }
+        .weather-desc {
+          display: none;
+        }
+      }
+
+      /* ─── Responsive: Mobile ─── */
+      @media (max-width: 600px) {
+        :root {
+          --gutter: 12px;
+          --row-height: 48px;
+        }
+
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+          padding: 16px var(--gutter) 12px;
+        }
+
+        .header-right {
+          text-align: left;
+          width: 100%;
+          justify-content: space-between;
+        }
+        .clock {
+          font-size: 1.8rem;
+        }
+        .header-left h1 {
+          font-size: 1.15rem;
+        }
+        .clock-date {
+          font-size: 0.65rem;
+        }
+
+        .departures-header,
+        .departure-row {
+          grid-template-columns: 52px 1fr 44px 72px 56px;
+          padding: 0 8px;
+        }
+
+        .departures-header {
+          padding: 10px 8px;
+        }
+
+        .line-badge {
+          min-width: 36px;
+          height: 24px;
+          padding: 0 6px;
+          font-size: 0.75rem;
+          border-radius: 4px;
+        }
+
+        .destination {
+          font-size: 0.85rem;
+        }
+        .time-remaining {
+          font-size: 1.05rem;
+        }
+        .time-abs {
+          font-size: 0.75rem;
+        }
+        .platform {
+          font-size: 0.7rem;
+        }
+        .min-label {
+          font-size: 0.55rem;
+        }
+        .departure-group-label {
+          padding: 8px 8px 4px;
+          font-size: 0.6rem;
+        }
+        .filter-chips {
+          padding: 8px var(--gutter);
+          gap: 5px;
+        }
+        .filter-chip {
+          font-size: 0.65rem;
+          padding: 3px 8px;
+        }
+      }
+
+      /* ─── Responsive: Very Small ─── */
+      @media (max-width: 420px) {
+        .departures-header,
+        .departure-row {
+          grid-template-columns: 48px 1fr 72px 52px;
+        }
+
+        .col-plat,
+        .departure-row > :nth-child(3) {
+          display: none;
+        }
+
+        .departures-header {
+          padding: 10px 6px;
+        }
+        .departure-row {
+          padding: 0 6px;
+        }
+        .weather-widget {
+          padding: 4px 8px;
+        }
+        .weather-icon {
+          font-size: 1.1rem;
+        }
+        .weather-temp {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-glow"></div>
+
+    <header>
+      <div class="header-left">
+        <h1>Aachen Bushof</h1>
+        <div class="subtitle">Abfahrtsmonitor</div>
+      </div>
+      <div class="header-right">
+        <div class="weather-widget" id="weatherWidget">
+          <span class="weather-icon" id="weatherIcon"></span>
+          <div>
+            <div class="weather-temp mono" id="weatherTemp"></div>
+            <div class="weather-desc" id="weatherDesc"></div>
+          </div>
+        </div>
+        <div class="clock-wrapper">
+          <div class="clock mono" id="clock"></div>
+          <div class="clock-date" id="clockDate"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="status-bar">
+      <div class="status-bar-content">
+        <span class="status-indicator">
+          <span class="status-dot loading" id="statusDot"></span>
+          <span id="statusText">Verbinde...</span>
+        </span>
+        <span class="error-msg" id="errorMsg"></span>
+        <span class="refresh-info mono" id="countdown"></span>
+      </div>
+      <div class="refresh-progress">
+        <div class="refresh-progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-chips" id="filterChips"></div>
+    </div>
+
+    <main>
+      <div class="departures-header">
+        <span class="col-line">Linie</span>
+        <span class="col-dest">Ziel</span>
+        <span class="col-plat">Steig</span>
+        <span class="col-time">Abfahrt</span>
+        <span class="col-min">Min.</span>
+      </div>
+      <div class="departures-list" id="departures">
+        <div class="loading-spinner"></div>
+      </div>
+    </main>
+
+    <footer>
+      <span>Datenquelle: AVV / ASEAG &middot; Aktualisierung alle 30s</span>
+    </footer>
+
+    <script>
+      const LINE_COLORS = {
+        1: "#e53935",
+        "1E": "#e53935",
+        2: "#1e88e5",
+        "2E": "#1e88e5",
+        4: "#43a047",
+        5: "#8e24aa",
+        "5E": "#8e24aa",
+        "5V": "#8e24aa",
+        7: "#00897b",
+        "7V": "#00897b",
+        11: "#f4511e",
+        "11E": "#f4511e",
+        "11V": "#f4511e",
+        12: "#1e88e5",
+        "12E": "#1e88e5",
+        14: "#6d4c41",
+        "14E": "#6d4c41",
+        15: "#ad1457",
+        "15E": "#ad1457",
+        16: "#283593",
+        17: "#00838f",
+        21: "#c62828",
+        22: "#6d4c41",
+        "22E": "#6d4c41",
+        23: "#558b2f",
+        "23V": "#558b2f",
+        24: "#00897b",
+        "24V": "#00897b",
+        25: "#3949ab",
+        "25E": "#3949ab",
+        27: "#9e9d24",
+        "27V": "#9e9d24",
+        31: "#ef6c00",
+        "31E": "#ef6c00",
+        "31V": "#ef6c00",
+        33: "#c62828",
+        34: "#ad1457",
+        "34E": "#ad1457",
+        "34V": "#ad1457",
+        35: "#6a1b9a",
+        36: "#1565c0",
+        37: "#4e342e",
+        41: "#00838f",
+        43: "#558b2f",
+        "43E": "#558b2f",
+        44: "#00838f",
+        45: "#2e7d32",
+        "45E": "#2e7d32",
+        "45V": "#2e7d32",
+        46: "#283593",
+        47: "#9e9d24",
+        "47E": "#9e9d24",
+        "47V": "#9e9d24",
+        51: "#ef6c00",
+        "51E": "#ef6c00",
+        "51V": "#ef6c00",
+        52: "#4e342e",
+        "52E": "#4e342e",
+        53: "#1565c0",
+        54: "#ad1457",
+        "54V": "#ad1457",
+        55: "#283593",
+        65: "#6a1b9a",
+        66: "#c62828",
+        "66E": "#c62828",
+        73: "#558b2f",
+        "73E": "#558b2f",
+        74: "#9e9d24",
+        75: "#00897b",
+        SB20: "#e65100",
+        SB63: "#e65100",
+        SB66: "#e65100",
+        SB71: "#e65100",
+        X25: "#b71c1c",
+        X35: "#b71c1c",
+        X47: "#b71c1c",
+        X51: "#b71c1c",
+        X73: "#b71c1c",
+        N1: "#37474f",
+        N2: "#37474f",
+        N3: "#37474f",
+        N4: "#37474f",
+        N5: "#37474f",
+        N6: "#37474f",
+        N7: "#37474f",
+        N8: "#37474f",
+        N9: "#37474f",
+        N60: "#37474f",
+      };
+
+      const DEFAULT_COLOR = "#3a5fcd";
+      const REFRESH_INTERVAL = 30;
+      const PROGRESS_MAX_MINUTES = 15;
+
+      let departures = [];
+      let lastKeys = "";
+      let lastMinValues = {};
+      let countdownSeconds = REFRESH_INTERVAL;
+      let errorMessage = null;
+      let isLoading = true;
+      let activeFilters = new Set();
+      let weatherData = null;
+
+      // ─── Restore filters from localStorage ───
+      try {
+        const saved = localStorage.getItem("busFilterLines");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) activeFilters = new Set(parsed);
+        }
+      } catch (e) {}
+
+      function getLineColor(line) {
+        return LINE_COLORS[line] || DEFAULT_COLOR;
+      }
+
+      function formatTime(epochMs) {
+        const d = new Date(epochMs);
+        return d.toLocaleTimeString("de-DE", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      function getMinutesRemaining(epochMs) {
+        return Math.round((epochMs - Date.now()) / 60000);
+      }
+
+      function getTimeClass(minutes) {
+        if (minutes <= 1) return "time-now";
+        if (minutes <= 5) return "time-soon";
+        return "time-later";
+      }
+
+      function escapeHtml(str) {
+        const div = document.createElement("div");
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      // ─── Weather ───
+      const WEATHER_CODES = {
+        0: ["☀️", "Klar"],
+        1: ["🌤️", "Heiter"],
+        2: ["⛅", "Bewölkt"],
+        3: ["☁️", "Bedeckt"],
+        45: ["🌫️", "Nebel"],
+        48: ["🌫️", "Reifnebel"],
+        51: ["🌦️", "Nieselregen"],
+        53: ["🌦️", "Nieselregen"],
+        55: ["🌦️", "Nieselregen"],
+        56: ["🌧️", "Gefrierender Niesel"],
+        57: ["🌧️", "Gefrierender Niesel"],
+        61: ["🌧️", "Regen"],
+        63: ["🌧️", "Regen"],
+        65: ["🌧️", "Starkregen"],
+        66: ["🌧️", "Gefrierender Regen"],
+        67: ["🌧️", "Gefrierender Regen"],
+        71: ["❄️", "Schnee"],
+        73: ["❄️", "Schnee"],
+        75: ["❄️", "Starker Schnee"],
+        77: ["❄️", "Schneekörner"],
+        80: ["🌦️", "Schauer"],
+        81: ["🌧️", "Schauer"],
+        82: ["⛈️", "Starke Schauer"],
+        85: ["🌨️", "Schneeschauer"],
+        86: ["🌨️", "Starke Schneeschauer"],
+        95: ["⛈️", "Gewitter"],
+        96: ["⛈️", "Gewitter m. Hagel"],
+        99: ["⛈️", "Gewitter m. Hagel"],
+      };
+
+      async function fetchWeather() {
+        try {
+          const url =
+            "https://api.open-meteo.com/v1/forecast?latitude=50.7753&longitude=6.0839&current=temperature_2m,weather_code&timezone=Europe%2FBerlin";
+          const res = await fetch(url);
+          const data = await res.json();
+          if (data.current) {
+            weatherData = {
+              temp: Math.round(data.current.temperature_2m),
+              code: data.current.weather_code,
+            };
+            renderWeather();
+          }
+        } catch (e) {
+          // Silently fail — weather is optional
+        }
+      }
+
+      function renderWeather() {
+        if (!weatherData) return;
+        const widget = document.getElementById("weatherWidget");
+        const iconEl = document.getElementById("weatherIcon");
+        const tempEl = document.getElementById("weatherTemp");
+        const descEl = document.getElementById("weatherDesc");
+        const [icon, desc] = WEATHER_CODES[weatherData.code] || ["🌡️", ""];
+        iconEl.textContent = icon;
+        tempEl.textContent = weatherData.temp + "°";
+        descEl.textContent = desc;
+        widget.classList.add("loaded");
+      }
+
+      // ─── Filter Chips ───
+      function getVisibleLines() {
+        const lineSet = new Map();
+        for (const d of departures) {
+          if (!lineSet.has(d.line)) {
+            lineSet.set(d.line, getLineColor(d.line));
+          }
+        }
+        // Sort: numbers first (numerically), then strings alphabetically
+        return [...lineSet.entries()].sort((a, b) => {
+          const aNum = parseInt(a[0]);
+          const bNum = parseInt(b[0]);
+          const aIsNum = !isNaN(aNum);
+          const bIsNum = !isNaN(bNum);
+          if (aIsNum && bIsNum) return aNum - bNum;
+          if (aIsNum) return -1;
+          if (bIsNum) return 1;
+          return a[0].localeCompare(b[0]);
+        });
+      }
+
+      function renderFilterChips() {
+        const container = document.getElementById("filterChips");
+        const lines = getVisibleLines();
+
+        let html =
+          '<button class="filter-chip filter-chip-all' +
+          (activeFilters.size === 0 ? " active" : "") +
+          '" data-line="__all__">Alle</button>';
+
+        for (const [line, color] of lines) {
+          const isActive = activeFilters.has(line);
+          html += `<button class="filter-chip${isActive ? " active" : ""}" data-line="${escapeHtml(line)}">
+            <span class="filter-chip-dot" style="background:${color}"></span>
+            ${escapeHtml(line)}
+          </button>`;
+        }
+
+        container.innerHTML = html;
+      }
+
+      document.getElementById("filterChips").addEventListener("click", (e) => {
+        const chip = e.target.closest(".filter-chip");
+        if (!chip) return;
+
+        const line = chip.dataset.line;
+        if (line === "__all__") {
+          activeFilters.clear();
+        } else {
+          if (activeFilters.has(line)) {
+            activeFilters.delete(line);
+          } else {
+            activeFilters.add(line);
+          }
+        }
+
+        // Persist to localStorage
+        try {
+          localStorage.setItem(
+            "busFilterLines",
+            JSON.stringify([...activeFilters]),
+          );
+        } catch (e) {}
+
+        renderFilterChips();
+        applyFilters();
+      });
+
+      function applyFilters() {
+        const rows = document.querySelectorAll(".departure-row");
+        rows.forEach((row) => {
+          if (activeFilters.size === 0) {
+            row.classList.remove("filtered-out");
+          } else {
+            const line = row.dataset.line;
+            row.classList.toggle("filtered-out", !activeFilters.has(line));
+          }
+        });
+      }
+
+      function isPassingFilter(dep) {
+        return activeFilters.size === 0 || activeFilters.has(dep.line);
+      }
+
+      // ─── Progress Bar Color ───
+      function getProgressColor(minutes) {
+        if (minutes <= 2) return "var(--color-danger)";
+        if (minutes <= 5) return "var(--color-warning)";
+        return "var(--color-success)";
+      }
+
+      function getProgressWidth(minutes) {
+        if (minutes <= 0) return 0;
+        if (minutes >= PROGRESS_MAX_MINUTES) return 100;
+        return (minutes / PROGRESS_MAX_MINUTES) * 100;
+      }
+
+      // ─── Build Row ───
+      function buildRow(d, index, isImminent) {
+        const mins = getMinutesRemaining(d.departureTimeMs);
+        const timeClass = getTimeClass(mins);
+        const color = getLineColor(d.line);
+
+        const delayMin =
+          d.scheduledTimeMs && d.departureTimeMs !== d.scheduledTimeMs
+            ? Math.round((d.departureTimeMs - d.scheduledTimeMs) / 60000)
+            : 0;
+
+        let timeContent = "";
+        if (d.isCancelled) {
+          timeContent = `
+          <span class="time-realtime">
+            <span class="mono">${formatTime(d.scheduledTimeMs)}</span>
+          </span>`;
+        } else if (delayMin > 0) {
+          timeContent = `
+          <span class="time-scheduled-struck mono">${formatTime(d.scheduledTimeMs)}</span>
+          <span class="time-realtime">
+            ${d.isRealtime ? '<span class="realtime-dot"></span>' : '<span class="schedule-icon"></span>'}
+            <span class="mono">${formatTime(d.departureTimeMs)}</span>
+            <span class="delay-badge">+${delayMin}</span>
+          </span>`;
+        } else {
+          timeContent = `
+          <span class="time-realtime">
+            ${d.isRealtime ? '<span class="realtime-dot"></span>' : '<span class="schedule-icon"></span>'}
+            <span class="mono">${formatTime(d.departureTimeMs)}</span>
+          </span>`;
+        }
+
+        let minsContent;
+        if (d.isCancelled) {
+          minsContent = '<span class="cancelled-badge">Fällt aus</span>';
+        } else if (mins <= 0) {
+          minsContent = '<span class="time-now-badge">jetzt</span>';
+        } else {
+          minsContent = `${mins}<span class="min-label">min</span>`;
+        }
+
+        const imminentClass = isImminent && !d.isCancelled ? " imminent" : "";
+        const scheduleClass = !d.isRealtime && !d.isCancelled ? " schedule-only" : "";
+        const cancelledClass = d.isCancelled ? " cancelled" : "";
+        const filterClass = !isPassingFilter(d) ? " filtered-out" : "";
+        const delay = index * 0.03;
+
+        const progressW = d.isCancelled ? 0 : getProgressWidth(mins);
+        const progressC = getProgressColor(mins);
+
+        return `<div class="departure-row${imminentClass}${scheduleClass}${cancelledClass}${filterClass}" style="animation-delay:${delay}s" data-key="${escapeHtml(d.line)}-${d.departureTimeMs}" data-line="${escapeHtml(d.line)}" data-dep-ms="${d.departureTimeMs}">
+        <div><span class="line-badge" style="background:${color}">${escapeHtml(d.line)}</span></div>
+        <div class="destination">${escapeHtml(d.destination)}</div>
+        <div class="platform mono">${escapeHtml(d.platform || "")}</div>
+        <div class="time-abs">${timeContent}</div>
+        <div class="time-remaining mono ${d.isCancelled ? '' : timeClass}" data-mins="${mins}">${minsContent}</div>
+        <div class="row-progress" style="width:${progressW}%;background:${progressC}"></div>
+      </div>`;
+      }
+
+      function renderDepartures() {
+        const container = document.getElementById("departures");
+        const now = Date.now();
+
+        const upcoming = departures.filter(
+          (d) => d.departureTimeMs - now > -90000,
+        );
+
+        if (upcoming.length === 0) {
+          container.innerHTML =
+            '<div class="empty-msg">Keine Abfahrten verfügbar</div>';
+          lastKeys = "";
+          return;
+        }
+
+        const items = upcoming.slice(0, 30);
+        const newKeys = items
+          .map((d) => `${d.line}-${d.departureTimeMs}-${d.isCancelled ? 'C' : ''}`)
+          .join(",");
+
+        if (lastKeys !== newKeys) {
+          // Structure changed — full rebuild with animation
+          const imminent = items.filter(
+            (d) => !d.isCancelled && getMinutesRemaining(d.departureTimeMs) <= 2,
+          );
+          const later = items.filter(
+            (d) => d.isCancelled || getMinutesRemaining(d.departureTimeMs) > 2,
+          );
+
+          let html = "";
+          let rowIndex = 0;
+
+          if (imminent.length > 0) {
+            html += '<div class="departure-group-label">Jetzt abfahrend</div>';
+            imminent.forEach((d) => {
+              html += buildRow(d, rowIndex++, true);
+            });
+          }
+
+          if (later.length > 0 && imminent.length > 0) {
+            html +=
+              '<div class="departure-group-label">Nächste Abfahrten</div>';
+          }
+
+          later.forEach((d) => {
+            html += buildRow(d, rowIndex++, false);
+          });
+
+          // Transition out old content
+          container.style.opacity = "0";
+          container.style.transition = "opacity 0.12s ease";
+
+          setTimeout(() => {
+            container.innerHTML = html;
+            lastKeys = newKeys;
+            // Store current min values for bump detection
+            lastMinValues = {};
+            items.forEach((d) => {
+              const key = `${d.line}-${d.departureTimeMs}`;
+              lastMinValues[key] = getMinutesRemaining(d.departureTimeMs);
+            });
+            container.style.opacity = "1";
+            renderFilterChips();
+          }, 120);
+        } else {
+          // Same structure — update minutes and progress in place
+          const rows = container.querySelectorAll(".departure-row");
+          let idx = 0;
+          items.forEach((d) => {
+            if (idx >= rows.length) return;
+            const row = rows[idx];
+
+            if (d.isCancelled) {
+              idx++;
+              return;
+            }
+
+            const mins = getMinutesRemaining(d.departureTimeMs);
+            const timeClass = getTimeClass(mins);
+            const minEl = row.querySelector(".time-remaining");
+            const prevMins = parseInt(minEl.dataset.mins);
+
+            if (mins <= 0) {
+              minEl.innerHTML = '<span class="time-now-badge">jetzt</span>';
+              minEl.className = "time-remaining mono";
+            } else {
+              minEl.innerHTML = `${mins}<span class="min-label">min</span>`;
+              minEl.className = `time-remaining mono ${timeClass}`;
+            }
+            minEl.dataset.mins = mins;
+
+            // Bump animation when minute changes
+            if (!isNaN(prevMins) && prevMins !== mins) {
+              minEl.classList.remove("minute-bump");
+              void minEl.offsetWidth; // Force reflow
+              minEl.classList.add("minute-bump");
+            }
+
+            if (mins <= 2 && !row.classList.contains("imminent")) {
+              row.classList.add("imminent");
+              row.style.borderLeft = "3px solid var(--time-now)";
+              row.style.paddingLeft = "13px";
+              row.style.background = "rgba(248, 81, 73, 0.04)";
+            }
+
+            // Update progress bar
+            const progressBar = row.querySelector(".row-progress");
+            if (progressBar) {
+              progressBar.style.width = getProgressWidth(mins) + "%";
+              progressBar.style.background = getProgressColor(mins);
+            }
+
+            idx++;
+          });
+        }
+      }
+
+      async function fetchDepartures() {
+        isLoading = true;
+        updateStatus();
+
+        try {
+          const res = await fetch("/api/departures");
+          const data = await res.json();
+
+          if (data.error && data.departures.length === 0) {
+            errorMessage = data.error;
+          } else {
+            errorMessage = data.error || null;
+          }
+
+          departures = data.departures || [];
+          isLoading = false;
+          countdownSeconds = REFRESH_INTERVAL;
+          renderDepartures();
+          updateStatus();
+
+          // Reset progress bar
+          const bar = document.getElementById("progressBar");
+          bar.style.transition = "none";
+          bar.style.transform = "scaleX(1)";
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              bar.style.transition = "transform 1s linear";
+            });
+          });
+        } catch (err) {
+          isLoading = false;
+          errorMessage = "Verbindung zum Server fehlgeschlagen";
+          updateStatus();
+        }
+      }
+
+      function updateClock() {
+        const now = new Date();
+        document.getElementById("clock").textContent = now.toLocaleTimeString(
+          "de-DE",
+          { hour: "2-digit", minute: "2-digit", second: "2-digit" },
+        );
+        document.getElementById("clockDate").textContent =
+          now.toLocaleDateString("de-DE", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          });
+      }
+
+      function updateStatus() {
+        const dot = document.getElementById("statusDot");
+        const text = document.getElementById("statusText");
+        const errEl = document.getElementById("errorMsg");
+
+        if (isLoading) {
+          dot.className = "status-dot loading";
+          text.textContent = "Lade Daten...";
+        } else if (errorMessage) {
+          dot.className = "status-dot error";
+          text.textContent = "Fehler";
+        } else {
+          dot.className = "status-dot ok";
+          text.textContent = "Verbunden";
+        }
+
+        errEl.textContent = errorMessage || "";
+      }
+
+      function updateCountdown() {
+        countdownSeconds--;
+        const pct = Math.max(0, countdownSeconds / REFRESH_INTERVAL);
+        document.getElementById("progressBar").style.transform =
+          `scaleX(${pct})`;
+        document.getElementById("countdown").textContent =
+          `${countdownSeconds}s`;
+
+        if (countdownSeconds <= 0) {
+          fetchDepartures();
+        }
+
+        if (departures.length > 0) {
+          renderDepartures();
+        }
+      }
+
+      // ─── Service Worker Registration ───
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/sw.js")
+          .catch(() => {});
+      }
+
+      // Init
+      updateClock();
+      fetchDepartures();
+      fetchWeather();
+      setInterval(updateClock, 1000);
+      setInterval(updateCountdown, 1000);
+      setInterval(fetchWeather, 600000); // Refresh weather every 10 minutes
+    </script>
+  </body>
+</html>

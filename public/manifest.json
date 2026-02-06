@@ -1,0 +1,17 @@
+{
+  "name": "Aachen Bushof Abfahrtsmonitor",
+  "short_name": "Bushof",
+  "description": "Echtzeit-Abfahrtsmonitor für den Aachener Bushof",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0d1117",
+  "background_color": "#0d1117",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
