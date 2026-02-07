@@ -6,35 +6,41 @@
     <title>Aachen Bushof — Abfahrtsmonitor</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#0d1117" />
+    <meta name="theme-color" content="#0a0e17" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <style>
       :root {
-        --bg-primary: #0d1117;
-        --bg-secondary: #161b22;
-        --bg-tertiary: #1c2129;
-        --bg-surface: #21262d;
-        --bg-hover: rgba(136, 198, 255, 0.04);
+        --bg-primary: #0a0e17;
+        --bg-secondary: #111827;
+        --bg-tertiary: #1a2233;
+        --bg-surface: #1f2b3d;
+        --bg-hover: rgba(99, 179, 255, 0.06);
 
-        --border-default: #30363d;
-        --border-muted: #21262d;
+        --border-default: rgba(255, 255, 255, 0.08);
+        --border-muted: rgba(255, 255, 255, 0.04);
 
-        --text-primary: #e6edf3;
-        --text-secondary: #8b949e;
-        --text-tertiary: #6e7681;
+        --text-primary: #f0f4f8;
+        --text-secondary: #94a3b8;
+        --text-tertiary: #64748b;
 
-        --color-success: #3fb950;
-        --color-warning: #d29922;
-        --color-danger: #f85149;
-        --color-info: #58a6ff;
+        --color-success: #34d399;
+        --color-warning: #fbbf24;
+        --color-danger: #f87171;
+        --color-info: #60a5fa;
 
-        --time-now: #f85149;
-        --time-soon: #d29922;
-        --time-later: #3fb950;
+        --gradient-accent: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa);
+        --gradient-warm: linear-gradient(135deg, #f59e0b, #ef4444);
+        --gradient-cool: linear-gradient(135deg, #3b82f6, #06b6d4);
+
+        --time-now: #f87171;
+        --time-soon: #fbbf24;
+        --time-later: #34d399;
 
         --gutter: 24px;
         --row-height: 56px;
+
+        --sticky-header-h: 0px;
       }
 
       * {
@@ -54,6 +60,10 @@
           Arial,
           sans-serif;
         background: var(--bg-primary);
+        background-image:
+          radial-gradient(ellipse at 20% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+        background-attachment: fixed;
         color: var(--text-primary);
         min-height: 100vh;
         -webkit-font-smoothing: antialiased;
@@ -67,22 +77,172 @@
         font-variant-numeric: tabular-nums;
       }
 
+      /* ─── Ambient Weather Layer ─── */
+      .ambient-layer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .ambient-layer.rain::before,
+      .ambient-layer.rain::after {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+          linear-gradient(180deg, rgba(88,166,255,0.08) 0%, transparent 60%),
+          linear-gradient(180deg, rgba(88,166,255,0.05) 0%, transparent 50%);
+        background-size: 2px 120px, 2px 100px;
+        background-position: 20% 0, 60% 30px;
+        animation: rainFall 0.8s linear infinite;
+        opacity: 0.6;
+      }
+
+      .ambient-layer.rain::after {
+        background-position: 40% 15px, 80% 45px;
+        animation-duration: 1s;
+        animation-delay: 0.3s;
+        opacity: 0.4;
+      }
+
+      @keyframes rainFall {
+        from { transform: translateY(0); }
+        to { transform: translateY(120px); }
+      }
+
+      .ambient-layer.drizzle::before {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+          linear-gradient(180deg, rgba(88,166,255,0.05) 0%, transparent 60%);
+        background-size: 1px 100px;
+        background-position: 30% 0;
+        animation: rainFall 1.5s linear infinite;
+        opacity: 0.25;
+      }
+
+      .ambient-layer.drizzle::after {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+          linear-gradient(180deg, rgba(88,166,255,0.04) 0%, transparent 50%);
+        background-size: 1px 80px;
+        background-position: 65% 20px;
+        animation: rainFall 1.8s linear infinite;
+        animation-delay: 0.5s;
+        opacity: 0.15;
+      }
+
+      .ambient-layer.snow::before {
+        content: '';
+        position: absolute;
+        top: -20%;
+        left: -10%;
+        right: -10%;
+        bottom: 0;
+        background-image: radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.15), transparent),
+          radial-gradient(2px 2px at 50% 50%, rgba(255,255,255,0.12), transparent),
+          radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,0.1), transparent),
+          radial-gradient(2px 2px at 35% 70%, rgba(255,255,255,0.08), transparent),
+          radial-gradient(1px 1px at 65% 85%, rgba(255,255,255,0.12), transparent);
+        background-size: 200px 300px;
+        animation: snowFall 8s linear infinite;
+      }
+
+      .ambient-layer.snow::after {
+        content: '';
+        position: absolute;
+        top: -30%;
+        left: -5%;
+        right: -5%;
+        bottom: 0;
+        background-image: radial-gradient(3px 3px at 15% 40%, rgba(255,255,255,0.1), transparent),
+          radial-gradient(1.5px 1.5px at 45% 25%, rgba(255,255,255,0.08), transparent),
+          radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,0.12), transparent),
+          radial-gradient(1px 1px at 90% 45%, rgba(255,255,255,0.06), transparent);
+        background-size: 180px 280px;
+        animation: snowFall 12s linear infinite;
+        animation-delay: 2s;
+      }
+
+      @keyframes snowFall {
+        from { transform: translateY(0) translateX(0); }
+        to { transform: translateY(300px) translateX(30px); }
+      }
+
+      .ambient-layer.fog::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -50%;
+        right: -50%;
+        bottom: 0;
+        background: linear-gradient(90deg,
+          transparent 0%,
+          rgba(255,255,255,0.02) 20%,
+          rgba(255,255,255,0.04) 50%,
+          rgba(255,255,255,0.02) 80%,
+          transparent 100%);
+        animation: fogDrift 15s ease-in-out infinite alternate;
+      }
+
+      @keyframes fogDrift {
+        from { transform: translateX(0); }
+        to { transform: translateX(30%); }
+      }
+
+      .ambient-layer.storm::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: transparent;
+        animation: lightning 6s ease-in-out infinite;
+      }
+
+      @keyframes lightning {
+        0%, 94%, 96%, 98%, 100% { background: transparent; }
+        95% { background: rgba(200,220,255,0.08); }
+        97% { background: rgba(200,220,255,0.14); }
+      }
+
       /* ─── Header Glow Line ─── */
       .header-glow {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        height: 2px;
+        height: 3px;
         background: linear-gradient(
           90deg,
-          var(--color-info),
-          var(--color-success),
-          var(--color-info)
+          #6366f1,
+          #8b5cf6,
+          #06b6d4,
+          #34d399,
+          #6366f1
         );
-        background-size: 200% 100%;
-        animation: shimmer 4s ease-in-out infinite;
-        z-index: 100;
+        background-size: 300% 100%;
+        animation: shimmer 6s ease-in-out infinite;
+        z-index: 200;
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.3), 0 0 60px rgba(99, 102, 241, 0.1);
       }
 
       @keyframes shimmer {
@@ -95,34 +255,75 @@
         }
       }
 
+      /* ─── Sticky Wrapper ─── */
+      .sticky-top {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
       /* ─── Header ─── */
       header {
-        background: linear-gradient(
-          180deg,
-          var(--bg-secondary) 0%,
-          var(--bg-primary) 100%
-        );
-        padding: 24px var(--gutter) 20px;
-        border-bottom: 1px solid var(--border-default);
+        background: rgba(10, 14, 23, 0.85);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        padding: 28px var(--gutter) 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: relative;
+      }
+
+      .header-title-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .header-icon {
+        font-size: 2rem;
+        line-height: 1;
+        filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
       }
 
       .header-left h1 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        letter-spacing: -0.01em;
+        font-size: 1.7rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #f0f4f8 0%, #a5b4fc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
       .header-left .subtitle {
-        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.7rem;
         color: var(--text-tertiary);
-        margin-top: 4px;
+        margin-top: 6px;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
-        font-weight: 400;
+        letter-spacing: 0.12em;
+        font-weight: 500;
+      }
+
+      .subtitle-line {
+        flex: 0 0 24px;
+        height: 1px;
+        background: linear-gradient(90deg, var(--color-info), transparent);
+      }
+
+      .subtitle-line:last-child {
+        background: linear-gradient(90deg, transparent, var(--color-info));
+        flex: 1;
+      }
+
+      .header-divider {
+        width: 1px;
+        height: 40px;
+        background: linear-gradient(180deg, transparent, rgba(255,255,255,0.1), transparent);
       }
 
       .header-right {
@@ -136,11 +337,14 @@
       .weather-widget {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 6px 12px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid var(--border-muted);
-        border-radius: 10px;
+        gap: 10px;
+        padding: 8px 14px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.05);
         opacity: 0;
         transition: opacity 0.5s ease;
       }
@@ -150,13 +354,13 @@
       }
 
       .weather-icon {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         line-height: 1;
       }
 
       .weather-temp {
-        font-size: 1.1rem;
-        font-weight: 500;
+        font-size: 1.15rem;
+        font-weight: 600;
         color: var(--text-primary);
         line-height: 1;
       }
@@ -174,23 +378,26 @@
 
       .clock {
         font-size: 2.8rem;
-        font-weight: 300;
+        font-weight: 200;
         color: var(--text-primary);
         line-height: 1;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.04em;
+        text-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
       }
 
       .clock-date {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         color: var(--text-tertiary);
         margin-top: 4px;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.03em;
       }
 
       /* ─── Status Bar ─── */
       .status-bar {
-        background: var(--bg-tertiary);
-        border-bottom: 1px solid var(--border-muted);
+        background: rgba(10, 14, 23, 0.8);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       }
 
       .status-bar-content {
@@ -209,8 +416,8 @@
       }
 
       .status-dot {
-        width: 6px;
-        height: 6px;
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
         display: inline-block;
         flex-shrink: 0;
@@ -218,11 +425,11 @@
 
       .status-dot.ok {
         background: var(--color-success);
-        box-shadow: 0 0 4px var(--color-success);
+        box-shadow: 0 0 6px var(--color-success), 0 0 12px rgba(52, 211, 153, 0.2);
       }
       .status-dot.error {
         background: var(--color-danger);
-        box-shadow: 0 0 4px var(--color-danger);
+        box-shadow: 0 0 6px var(--color-danger), 0 0 12px rgba(248, 113, 113, 0.2);
       }
       .status-dot.loading {
         background: var(--color-warning);
@@ -253,13 +460,13 @@
 
       .refresh-progress {
         height: 2px;
-        background: var(--border-muted);
+        background: rgba(255, 255, 255, 0.03);
         overflow: hidden;
       }
 
       .refresh-progress-bar {
         height: 100%;
-        background: var(--color-info);
+        background: linear-gradient(90deg, var(--color-info), #8b5cf6);
         width: 100%;
         transform-origin: left;
         transition: transform 1s linear;
@@ -268,8 +475,10 @@
 
       /* ─── Filter Chips ─── */
       .filter-bar {
-        background: var(--bg-secondary);
-        border-bottom: 1px solid var(--border-muted);
+        background: rgba(10, 14, 23, 0.8);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         overflow: hidden;
       }
 
@@ -290,31 +499,32 @@
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        padding: 4px 10px;
+        padding: 5px 12px;
         border-radius: 20px;
-        border: 1px solid var(--border-default);
-        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
         color: var(--text-secondary);
         font-size: 0.72rem;
         font-weight: 500;
         cursor: pointer;
         white-space: nowrap;
-        transition: all 0.2s ease;
+        transition: all 0.25s ease;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
         font-family: inherit;
       }
 
       .filter-chip:hover {
-        border-color: var(--text-tertiary);
-        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateY(-1px);
       }
 
       .filter-chip.active {
-        border-color: var(--color-info);
-        background: rgba(88, 166, 255, 0.1);
-        color: var(--color-info);
-        box-shadow: 0 0 8px rgba(88, 166, 255, 0.15);
+        border-color: rgba(99, 102, 241, 0.5);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+        color: #c7d2fe;
+        box-shadow: 0 0 12px rgba(99, 102, 241, 0.2), 0 0 4px rgba(99, 102, 241, 0.1);
       }
 
       .filter-chip-dot {
@@ -322,6 +532,7 @@
         height: 8px;
         border-radius: 3px;
         flex-shrink: 0;
+        box-shadow: 0 0 6px currentColor;
       }
 
       .filter-chip-all {
@@ -332,6 +543,8 @@
       /* ─── Main Content ─── */
       main {
         padding: 0 var(--gutter) 80px;
+        position: relative;
+        z-index: 1;
       }
 
       .departures-header {
@@ -339,12 +552,13 @@
         grid-template-columns: 72px 1fr 56px 100px 72px;
         gap: 0;
         padding: 14px 16px;
-        font-size: 0.7rem;
-        font-weight: 500;
+        font-size: 0.68rem;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.1em;
         color: var(--text-tertiary);
-        border-bottom: 1px solid var(--border-default);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.01);
       }
 
       .col-plat,
@@ -361,11 +575,11 @@
 
       /* ─── Group Labels ─── */
       .departure-group-label {
-        padding: 12px 16px 6px;
+        padding: 14px 16px 8px;
         font-size: 0.65rem;
-        font-weight: 500;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.12em;
         color: var(--text-tertiary);
         display: flex;
         align-items: center;
@@ -376,7 +590,11 @@
         content: "";
         flex: 1;
         height: 1px;
-        background: var(--border-muted);
+        background: linear-gradient(90deg, rgba(255,255,255,0.06), transparent);
+      }
+
+      .departures-list {
+        transition: opacity 0.3s ease;
       }
 
       /* ─── Departure Row ─── */
@@ -387,22 +605,22 @@
         align-items: center;
         padding: 0 16px;
         height: var(--row-height);
-        border-bottom: 1px solid var(--border-muted);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         position: relative;
         overflow: hidden;
-        transition: background 0.2s ease, opacity 0.3s ease;
+        transition: background 0.25s ease, opacity 0.3s ease, border-color 0.25s ease;
         animation: rowSlideIn 0.35s ease both;
       }
 
       .departure-row:hover {
-        background: var(--bg-hover);
+        background: rgba(99, 102, 241, 0.04);
       }
 
       .departure-row:nth-child(even of .departure-row) {
-        background: rgba(255, 255, 255, 0.008);
+        background: rgba(255, 255, 255, 0.01);
       }
       .departure-row:nth-child(even of .departure-row):hover {
-        background: var(--bg-hover);
+        background: rgba(99, 102, 241, 0.04);
       }
 
       @keyframes rowSlideIn {
@@ -416,35 +634,20 @@
         }
       }
 
-      @keyframes rowSlideOut {
-        from {
-          opacity: 1;
-          transform: translateX(0);
-          max-height: var(--row-height);
-        }
-        to {
-          opacity: 0;
-          transform: translateX(-30px);
-          max-height: 0;
-          padding-top: 0;
-          padding-bottom: 0;
-          border-bottom-width: 0;
-        }
-      }
-
       .departure-row.imminent {
         border-left: 3px solid var(--time-now);
         padding-left: 13px;
-        background: rgba(248, 81, 73, 0.04);
+        background: rgba(248, 113, 113, 0.06);
+        box-shadow: inset 4px 0 12px rgba(248, 113, 113, 0.08);
       }
 
       .departure-row.schedule-only {
-        opacity: 0.65;
+        opacity: 0.6;
       }
 
       .departure-row.cancelled {
-        background: rgba(248, 81, 73, 0.06);
-        opacity: 0.7;
+        background: rgba(248, 113, 113, 0.04);
+        opacity: 0.65;
       }
 
       .departure-row.cancelled .destination {
@@ -478,8 +681,25 @@
         background: var(--color-info);
         line-height: 1;
         box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.15),
-          0 1px 3px rgba(0, 0, 0, 0.3);
+          inset 0 1px 0 rgba(255, 255, 255, 0.25),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+          0 2px 8px rgba(0, 0, 0, 0.3),
+          0 0 12px rgba(0, 0, 0, 0.1);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .line-badge::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
+        border-radius: 6px 6px 0 0;
+        pointer-events: none;
       }
 
       /* ─── Destination ─── */
@@ -498,6 +718,10 @@
         text-align: center;
         color: var(--text-secondary);
         font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
       }
 
       /* ─── Time Absolute ─── */
@@ -531,8 +755,14 @@
         height: 5px;
         border-radius: 50%;
         background: var(--color-success);
-        box-shadow: 0 0 3px var(--color-success);
+        box-shadow: 0 0 4px var(--color-success), 0 0 8px rgba(52, 211, 153, 0.3);
+        animation: realtimePulse 2s ease-in-out infinite;
         flex-shrink: 0;
+      }
+
+      @keyframes realtimePulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
       }
 
       .schedule-icon {
@@ -549,10 +779,11 @@
         font-size: 0.6rem;
         font-weight: 700;
         color: var(--color-danger);
-        background: rgba(248, 81, 73, 0.12);
-        padding: 1px 4px;
-        border-radius: 3px;
+        background: rgba(248, 113, 113, 0.12);
+        padding: 1px 5px;
+        border-radius: 4px;
         line-height: 1.2;
+        border: 1px solid rgba(248, 113, 113, 0.15);
       }
 
       /* ─── Minutes Remaining ─── */
@@ -561,6 +792,8 @@
         font-weight: 700;
         font-size: 1.3rem;
         line-height: 1;
+        position: relative;
+        overflow: hidden;
       }
 
       .min-label {
@@ -570,11 +803,52 @@
         margin-left: 1px;
       }
 
+      .time-now {
+        color: var(--time-now);
+        text-shadow: 0 0 12px rgba(248, 113, 113, 0.3);
+      }
       .time-later {
         color: var(--time-later);
+        text-shadow: 0 0 12px rgba(52, 211, 153, 0.2);
       }
       .time-soon {
         color: var(--time-soon);
+        text-shadow: 0 0 12px rgba(251, 191, 36, 0.25);
+      }
+
+      /* ─── Flip Digit Animation ─── */
+      .flip-digit {
+        display: inline-block;
+        position: relative;
+      }
+
+      .flip-digit.flipping {
+        perspective: 100px;
+      }
+
+      .digit-old,
+      .digit-new {
+        backface-visibility: hidden;
+      }
+
+      @keyframes digitExit {
+        from { transform: translateY(0) rotateX(0); opacity: 1; }
+        to { transform: translateY(-100%) rotateX(30deg); opacity: 0; }
+      }
+
+      @keyframes digitEnter {
+        from { transform: translateY(100%) rotateX(-30deg); opacity: 0; }
+        to { transform: translateY(0) rotateX(0); opacity: 1; }
+      }
+
+      .flip-digit.flipping .digit-old {
+        animation: digitExit 0.35s cubic-bezier(0.4, 0, 0.8, 0.2) forwards;
+        position: absolute;
+        right: 0;
+      }
+
+      .flip-digit.flipping .digit-new {
+        animation: digitEnter 0.4s cubic-bezier(0.2, 0.8, 0.4, 1) 0.05s forwards;
       }
 
       .time-now-badge {
@@ -582,19 +856,20 @@
         font-size: 0.75rem;
         font-weight: 700;
         color: #fff;
-        background: var(--time-now);
-        padding: 3px 8px;
+        background: linear-gradient(135deg, #ef4444, #f87171);
+        padding: 3px 10px;
         border-radius: 4px;
         animation: nowPulse 2s ease-in-out infinite;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
       }
 
       @keyframes nowPulse {
         0%,
         100% {
-          box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.4);
+          box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.5);
         }
         50% {
-          box-shadow: 0 0 0 6px rgba(248, 81, 73, 0);
+          box-shadow: 0 0 0 8px rgba(248, 113, 113, 0);
         }
       }
 
@@ -603,10 +878,11 @@
         font-size: 0.65rem;
         font-weight: 700;
         color: #fff;
-        background: var(--color-danger);
+        background: linear-gradient(135deg, #dc2626, #ef4444);
         padding: 3px 8px;
         border-radius: 4px;
         letter-spacing: 0.02em;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
       }
 
       /* ─── Row Progress Bar ─── */
@@ -617,45 +893,77 @@
         height: 2px;
         border-radius: 0 1px 1px 0;
         transition: width 1s linear, background 1s linear;
-        opacity: 0.6;
+        opacity: 0.8;
+        box-shadow: 0 0 6px currentColor;
       }
 
       .departure-row.cancelled .row-progress {
         display: none;
       }
 
-      /* ─── Loading & Empty ─── */
+      /* ─── Loading Skeleton ─── */
+      .skeleton-container {
+        padding: 0;
+      }
+
+      .skeleton-row {
+        display: grid;
+        grid-template-columns: 72px 1fr 56px 100px 72px;
+        gap: 0;
+        align-items: center;
+        padding: 0 16px;
+        height: var(--row-height);
+        border-bottom: 1px solid var(--border-muted);
+      }
+
+      .skeleton-block {
+        height: 14px;
+        border-radius: 6px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.03) 25%,
+          rgba(255, 255, 255, 0.06) 50%,
+          rgba(255, 255, 255, 0.03) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.8s ease-in-out infinite;
+      }
+
+      .skeleton-badge {
+        width: 44px;
+        height: 28px;
+        border-radius: 6px;
+      }
+
+      .skeleton-text {
+        width: 70%;
+        height: 14px;
+      }
+
+      .skeleton-small {
+        width: 28px;
+        height: 12px;
+        margin: 0 auto;
+      }
+
+      .skeleton-time {
+        width: 48px;
+        height: 12px;
+        margin: 0 auto;
+      }
+
+      .skeleton-min {
+        width: 32px;
+        height: 18px;
+        margin-left: auto;
+      }
+
+      /* ─── Empty State ─── */
       .empty-msg {
         text-align: center;
         padding: 80px 20px;
         color: var(--text-tertiary);
         font-size: 1rem;
-      }
-
-      .loading-spinner {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 80px 20px;
-        gap: 16px;
-        color: var(--text-tertiary);
-        font-size: 0.85rem;
-      }
-
-      .loading-spinner::before {
-        content: "";
-        display: block;
-        width: 32px;
-        height: 32px;
-        border: 2px solid var(--border-default);
-        border-top-color: var(--color-info);
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-      }
-
-      .loading-spinner::after {
-        content: "Abfahrten werden geladen...";
       }
 
       @keyframes spin {
@@ -664,15 +972,63 @@
         }
       }
 
-      /* ─── Minute Bump Animation ─── */
-      @keyframes minuteBump {
-        0% { transform: scale(1); }
-        30% { transform: scale(1.15); }
-        100% { transform: scale(1); }
+      /* ─── Keyboard Shortcut Overlay ─── */
+      .shortcut-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        z-index: 300;
+        justify-content: center;
+        align-items: center;
       }
 
-      .minute-bump {
-        animation: minuteBump 0.3s ease;
+      .shortcut-overlay.visible {
+        display: flex;
+      }
+
+      .shortcut-card {
+        background: var(--bg-secondary);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 28px 36px;
+        max-width: 380px;
+        width: 90%;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03);
+      }
+
+      .shortcut-card h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: var(--text-primary);
+      }
+
+      .shortcut-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+      }
+
+      .shortcut-key {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        padding: 3px 10px;
+        font-size: 0.75rem;
+        color: var(--text-primary);
+        min-width: 28px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
       /* ─── Footer ─── */
@@ -681,20 +1037,26 @@
         bottom: 0;
         left: 0;
         right: 0;
-        padding: 24px var(--gutter) 10px;
+        padding: 30px var(--gutter) 12px;
         background: linear-gradient(
           180deg,
           transparent 0%,
-          var(--bg-primary) 40%
+          var(--bg-primary) 50%
         );
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         color: var(--text-tertiary);
         text-align: center;
         pointer-events: none;
+        z-index: 1;
       }
 
       footer span {
         pointer-events: auto;
+      }
+
+      .footer-hint {
+        margin-left: 6px;
+        opacity: 0.5;
       }
 
       /* ─── Responsive: Tablet ─── */
@@ -707,11 +1069,15 @@
           font-size: 2.2rem;
         }
         .header-left h1 {
-          font-size: 1.3rem;
+          font-size: 1.4rem;
+        }
+        .header-icon {
+          font-size: 1.6rem;
         }
         .weather-desc {
           display: none;
         }
+
       }
 
       /* ─── Responsive: Mobile ─── */
@@ -737,7 +1103,13 @@
           font-size: 1.8rem;
         }
         .header-left h1 {
-          font-size: 1.15rem;
+          font-size: 1.2rem;
+        }
+        .header-icon {
+          font-size: 1.4rem;
+        }
+        .header-divider {
+          display: none;
         }
         .clock-date {
           font-size: 0.65rem;
@@ -745,6 +1117,11 @@
 
         .departures-header,
         .departure-row {
+          grid-template-columns: 52px 1fr 44px 72px 56px;
+          padding: 0 8px;
+        }
+
+        .skeleton-row {
           grid-template-columns: 52px 1fr 44px 72px 56px;
           padding: 0 8px;
         }
@@ -788,6 +1165,8 @@
           font-size: 0.65rem;
           padding: 3px 8px;
         }
+
+        .footer-hint { display: none; }
       }
 
       /* ─── Responsive: Very Small ─── */
@@ -797,8 +1176,13 @@
           grid-template-columns: 48px 1fr 72px 52px;
         }
 
+        .skeleton-row {
+          grid-template-columns: 48px 1fr 72px 52px;
+        }
+
         .col-plat,
-        .departure-row > :nth-child(3) {
+        .departure-row > :nth-child(3),
+        .skeleton-row > :nth-child(3) {
           display: none;
         }
 
@@ -821,44 +1205,52 @@
     </style>
   </head>
   <body>
+    <div class="ambient-layer" id="ambientLayer"></div>
     <div class="header-glow"></div>
 
-    <header>
-      <div class="header-left">
-        <h1>Aachen Bushof</h1>
-        <div class="subtitle">Abfahrtsmonitor</div>
-      </div>
-      <div class="header-right">
-        <div class="weather-widget" id="weatherWidget">
-          <span class="weather-icon" id="weatherIcon"></span>
-          <div>
-            <div class="weather-temp mono" id="weatherTemp"></div>
-            <div class="weather-desc" id="weatherDesc"></div>
+    <div class="sticky-top">
+      <header>
+        <div class="header-left">
+          <div class="header-title-row">
+            <span class="header-icon">&#128653;</span>
+            <h1>Aachen Bushof</h1>
+          </div>
+          <div class="subtitle"><span class="subtitle-line"></span>Abfahrtsmonitor<span class="subtitle-line"></span></div>
+        </div>
+        <div class="header-right">
+          <div class="weather-widget" id="weatherWidget">
+            <span class="weather-icon" id="weatherIcon"></span>
+            <div>
+              <div class="weather-temp mono" id="weatherTemp"></div>
+              <div class="weather-desc" id="weatherDesc"></div>
+            </div>
+          </div>
+          <div class="header-divider"></div>
+          <div class="clock-wrapper">
+            <div class="clock mono" id="clock"></div>
+            <div class="clock-date" id="clockDate"></div>
           </div>
         </div>
-        <div class="clock-wrapper">
-          <div class="clock mono" id="clock"></div>
-          <div class="clock-date" id="clockDate"></div>
+      </header>
+
+      <div class="status-bar">
+        <div class="status-bar-content">
+          <span class="status-indicator">
+            <span class="status-dot loading" id="statusDot"></span>
+            <span id="statusText">Verbinde...</span>
+          </span>
+
+          <span class="error-msg" id="errorMsg"></span>
+          <span class="refresh-info mono" id="countdown"></span>
+        </div>
+        <div class="refresh-progress">
+          <div class="refresh-progress-bar" id="progressBar"></div>
         </div>
       </div>
-    </header>
 
-    <div class="status-bar">
-      <div class="status-bar-content">
-        <span class="status-indicator">
-          <span class="status-dot loading" id="statusDot"></span>
-          <span id="statusText">Verbinde...</span>
-        </span>
-        <span class="error-msg" id="errorMsg"></span>
-        <span class="refresh-info mono" id="countdown"></span>
+      <div class="filter-bar">
+        <div class="filter-chips" id="filterChips"></div>
       </div>
-      <div class="refresh-progress">
-        <div class="refresh-progress-bar" id="progressBar"></div>
-      </div>
-    </div>
-
-    <div class="filter-bar">
-      <div class="filter-chips" id="filterChips"></div>
     </div>
 
     <main>
@@ -870,12 +1262,32 @@
         <span class="col-min">Min.</span>
       </div>
       <div class="departures-list" id="departures">
-        <div class="loading-spinner"></div>
+        <div class="skeleton-container">
+          <div class="skeleton-row"><div><div class="skeleton-block skeleton-badge"></div></div><div><div class="skeleton-block skeleton-text"></div></div><div><div class="skeleton-block skeleton-small"></div></div><div><div class="skeleton-block skeleton-time"></div></div><div><div class="skeleton-block skeleton-min"></div></div></div>
+          <div class="skeleton-row"><div><div class="skeleton-block skeleton-badge"></div></div><div><div class="skeleton-block skeleton-text" style="width:55%"></div></div><div><div class="skeleton-block skeleton-small"></div></div><div><div class="skeleton-block skeleton-time"></div></div><div><div class="skeleton-block skeleton-min"></div></div></div>
+          <div class="skeleton-row"><div><div class="skeleton-block skeleton-badge"></div></div><div><div class="skeleton-block skeleton-text" style="width:80%"></div></div><div><div class="skeleton-block skeleton-small"></div></div><div><div class="skeleton-block skeleton-time"></div></div><div><div class="skeleton-block skeleton-min"></div></div></div>
+          <div class="skeleton-row"><div><div class="skeleton-block skeleton-badge"></div></div><div><div class="skeleton-block skeleton-text" style="width:45%"></div></div><div><div class="skeleton-block skeleton-small"></div></div><div><div class="skeleton-block skeleton-time"></div></div><div><div class="skeleton-block skeleton-min"></div></div></div>
+          <div class="skeleton-row"><div><div class="skeleton-block skeleton-badge"></div></div><div><div class="skeleton-block skeleton-text" style="width:65%"></div></div><div><div class="skeleton-block skeleton-small"></div></div><div><div class="skeleton-block skeleton-time"></div></div><div><div class="skeleton-block skeleton-min"></div></div></div>
+          <div class="skeleton-row"><div><div class="skeleton-block skeleton-badge"></div></div><div><div class="skeleton-block skeleton-text" style="width:50%"></div></div><div><div class="skeleton-block skeleton-small"></div></div><div><div class="skeleton-block skeleton-time"></div></div><div><div class="skeleton-block skeleton-min"></div></div></div>
+          <div class="skeleton-row"><div><div class="skeleton-block skeleton-badge"></div></div><div><div class="skeleton-block skeleton-text" style="width:75%"></div></div><div><div class="skeleton-block skeleton-small"></div></div><div><div class="skeleton-block skeleton-time"></div></div><div><div class="skeleton-block skeleton-min"></div></div></div>
+          <div class="skeleton-row"><div><div class="skeleton-block skeleton-badge"></div></div><div><div class="skeleton-block skeleton-text" style="width:60%"></div></div><div><div class="skeleton-block skeleton-small"></div></div><div><div class="skeleton-block skeleton-time"></div></div><div><div class="skeleton-block skeleton-min"></div></div></div>
+        </div>
       </div>
     </main>
 
+    <div class="shortcut-overlay" id="shortcutOverlay">
+      <div class="shortcut-card">
+        <h3>Tastenkombinationen</h3>
+        <div class="shortcut-row"><span>Aktualisieren</span><span class="shortcut-key mono">R</span></div>
+        <div class="shortcut-row"><span>Alle Filter zurücksetzen</span><span class="shortcut-key mono">A</span></div>
+        <div class="shortcut-row"><span>Linie 1-9 filtern</span><span class="shortcut-key mono">1-9</span></div>
+
+        <div class="shortcut-row"><span>Hilfe schließen</span><span class="shortcut-key mono">Esc</span></div>
+      </div>
+    </div>
+
     <footer>
-      <span>Datenquelle: AVV / ASEAG &middot; Aktualisierung alle 30s</span>
+      <span>Datenquelle: AVV / ASEAG &middot; Aktualisierung alle 30s<span class="footer-hint">&middot; <kbd>?</kbd> Tastenkürzel</span></span>
     </footer>
 
     <script>
@@ -974,6 +1386,7 @@
       const REFRESH_INTERVAL = 30;
       const PROGRESS_MAX_MINUTES = 15;
 
+
       let departures = [];
       let lastKeys = "";
       let lastMinValues = {};
@@ -983,13 +1396,15 @@
       let activeFilters = new Set();
       let weatherData = null;
 
-      // ─── Restore filters from localStorage ───
+
+      // ─── Restore state from localStorage ───
       try {
         const saved = localStorage.getItem("busFilterLines");
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed)) activeFilters = new Set(parsed);
         }
+
       } catch (e) {}
 
       function getLineColor(line) {
@@ -1052,6 +1467,15 @@
         99: ["⛈️", "Gewitter m. Hagel"],
       };
 
+      function getWeatherAmbientClass(code) {
+        if (code >= 95) return "storm";
+        if (code >= 71 && code <= 77 || code >= 85 && code <= 86) return "snow";
+        if (code >= 61 && code <= 67 || code >= 80 && code <= 82) return "rain";
+        if (code >= 51 && code <= 57) return "drizzle";
+        if (code >= 45 && code <= 48) return "fog";
+        return "";
+      }
+
       async function fetchWeather() {
         try {
           const url =
@@ -1065,9 +1489,7 @@
             };
             renderWeather();
           }
-        } catch (e) {
-          // Silently fail — weather is optional
-        }
+        } catch (e) {}
       }
 
       function renderWeather() {
@@ -1081,6 +1503,10 @@
         tempEl.textContent = weatherData.temp + "°";
         descEl.textContent = desc;
         widget.classList.add("loaded");
+
+        // Update ambient layer
+        const layer = document.getElementById("ambientLayer");
+        layer.className = "ambient-layer " + getWeatherAmbientClass(weatherData.code);
       }
 
       // ─── Filter Chips ───
@@ -1091,7 +1517,6 @@
             lineSet.set(d.line, getLineColor(d.line));
           }
         }
-        // Sort: numbers first (numerically), then strings alphabetically
         return [...lineSet.entries()].sort((a, b) => {
           const aNum = parseInt(a[0]);
           const bNum = parseInt(b[0]);
@@ -1124,11 +1549,7 @@
         container.innerHTML = html;
       }
 
-      document.getElementById("filterChips").addEventListener("click", (e) => {
-        const chip = e.target.closest(".filter-chip");
-        if (!chip) return;
-
-        const line = chip.dataset.line;
+      function toggleFilter(line) {
         if (line === "__all__") {
           activeFilters.clear();
         } else {
@@ -1138,17 +1559,18 @@
             activeFilters.add(line);
           }
         }
-
-        // Persist to localStorage
         try {
-          localStorage.setItem(
-            "busFilterLines",
-            JSON.stringify([...activeFilters]),
-          );
+          localStorage.setItem("busFilterLines", JSON.stringify([...activeFilters]));
         } catch (e) {}
-
         renderFilterChips();
         applyFilters();
+
+      }
+
+      document.getElementById("filterChips").addEventListener("click", (e) => {
+        const chip = e.target.closest(".filter-chip");
+        if (!chip) return;
+        toggleFilter(chip.dataset.line);
       });
 
       function applyFilters() {
@@ -1167,6 +1589,8 @@
         return activeFilters.size === 0 || activeFilters.has(dep.line);
       }
 
+
+
       // ─── Progress Bar Color ───
       function getProgressColor(minutes) {
         if (minutes <= 2) return "var(--color-danger)";
@@ -1178,6 +1602,23 @@
         if (minutes <= 0) return 0;
         if (minutes >= PROGRESS_MAX_MINUTES) return 100;
         return (minutes / PROGRESS_MAX_MINUTES) * 100;
+      }
+
+      // ─── Flip Digit Helper ───
+      function buildFlipDigits(value, prevValue) {
+        const str = String(value);
+        const prevStr = prevValue !== undefined ? String(prevValue) : str;
+        let html = '';
+        for (let i = 0; i < str.length; i++) {
+          const ch = str[i];
+          const prevCh = prevStr.length === str.length ? prevStr[i] : null;
+          if (prevCh !== null && prevCh !== ch && prevValue !== undefined) {
+            html += `<span class="flip-digit flipping"><span class="digit-old">${prevCh}</span><span class="digit-new">${ch}</span></span>`;
+          } else {
+            html += `<span class="flip-digit">${ch}</span>`;
+          }
+        }
+        return html;
       }
 
       // ─── Build Row ───
@@ -1219,7 +1660,7 @@
         } else if (mins <= 0) {
           minsContent = '<span class="time-now-badge">jetzt</span>';
         } else {
-          minsContent = `${mins}<span class="min-label">min</span>`;
+          minsContent = `${buildFlipDigits(mins)}<span class="min-label">min</span>`;
         }
 
         const imminentClass = isImminent && !d.isCancelled ? " imminent" : "";
@@ -1230,6 +1671,7 @@
 
         const progressW = d.isCancelled ? 0 : getProgressWidth(mins);
         const progressC = getProgressColor(mins);
+
 
         return `<div class="departure-row${imminentClass}${scheduleClass}${cancelledClass}${filterClass}" style="animation-delay:${delay}s" data-key="${escapeHtml(d.line)}-${d.departureTimeMs}" data-line="${escapeHtml(d.line)}" data-dep-ms="${d.departureTimeMs}">
         <div><span class="line-badge" style="background:${color}">${escapeHtml(d.line)}</span></div>
@@ -1262,7 +1704,6 @@
           .join(",");
 
         if (lastKeys !== newKeys) {
-          // Structure changed — full rebuild with animation
           const imminent = items.filter(
             (d) => !d.isCancelled && getMinutesRemaining(d.departureTimeMs) <= 2,
           );
@@ -1289,14 +1730,12 @@
             html += buildRow(d, rowIndex++, false);
           });
 
-          // Transition out old content
           container.style.opacity = "0";
-          container.style.transition = "opacity 0.12s ease";
+          container.style.transition = "opacity 0.3s ease";
 
           setTimeout(() => {
             container.innerHTML = html;
             lastKeys = newKeys;
-            // Store current min values for bump detection
             lastMinValues = {};
             items.forEach((d) => {
               const key = `${d.line}-${d.departureTimeMs}`;
@@ -1304,9 +1743,9 @@
             });
             container.style.opacity = "1";
             renderFilterChips();
-          }, 120);
+    
+          }, 300);
         } else {
-          // Same structure — update minutes and progress in place
           const rows = container.querySelectorAll(".departure-row");
           let idx = 0;
           items.forEach((d) => {
@@ -1327,17 +1766,15 @@
               minEl.innerHTML = '<span class="time-now-badge">jetzt</span>';
               minEl.className = "time-remaining mono";
             } else {
-              minEl.innerHTML = `${mins}<span class="min-label">min</span>`;
+              // Flip-clock animation on minute change
+              if (!isNaN(prevMins) && prevMins !== mins) {
+                minEl.innerHTML = `${buildFlipDigits(mins, prevMins)}<span class="min-label">min</span>`;
+              } else {
+                minEl.innerHTML = `${buildFlipDigits(mins)}<span class="min-label">min</span>`;
+              }
               minEl.className = `time-remaining mono ${timeClass}`;
             }
             minEl.dataset.mins = mins;
-
-            // Bump animation when minute changes
-            if (!isNaN(prevMins) && prevMins !== mins) {
-              minEl.classList.remove("minute-bump");
-              void minEl.offsetWidth; // Force reflow
-              minEl.classList.add("minute-bump");
-            }
 
             if (mins <= 2 && !row.classList.contains("imminent")) {
               row.classList.add("imminent");
@@ -1355,6 +1792,7 @@
 
             idx++;
           });
+  
         }
       }
 
@@ -1378,7 +1816,6 @@
           renderDepartures();
           updateStatus();
 
-          // Reset progress bar
           const bar = document.getElementById("progressBar");
           bar.style.transition = "none";
           bar.style.transform = "scaleX(1)";
@@ -1443,7 +1880,60 @@
         if (departures.length > 0) {
           renderDepartures();
         }
+
       }
+
+      // ─── Keyboard Shortcuts ───
+      document.addEventListener("keydown", (e) => {
+        // Ignore if user is typing in an input
+        if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+
+        const overlay = document.getElementById("shortcutOverlay");
+
+        if (e.key === "?" || (e.key === "/" && !e.shiftKey)) {
+          e.preventDefault();
+          overlay.classList.toggle("visible");
+          return;
+        }
+
+        if (e.key === "Escape") {
+          overlay.classList.remove("visible");
+          return;
+        }
+
+        if (overlay.classList.contains("visible")) return;
+
+        if (e.key === "r" || e.key === "R") {
+          e.preventDefault();
+          fetchDepartures();
+          return;
+        }
+
+        if (e.key === "a" || e.key === "A") {
+          e.preventDefault();
+          toggleFilter("__all__");
+          return;
+        }
+
+
+
+        // Number keys 1-9 toggle first 9 line filters
+        const num = parseInt(e.key);
+        if (num >= 1 && num <= 9) {
+          const lines = getVisibleLines();
+          if (num <= lines.length) {
+            e.preventDefault();
+            toggleFilter(lines[num - 1][0]);
+          }
+        }
+      });
+
+      // Close overlay on backdrop click
+      document.getElementById("shortcutOverlay").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) {
+          e.target.classList.remove("visible");
+        }
+      });
 
       // ─── Service Worker Registration ───
       if ("serviceWorker" in navigator) {
@@ -1458,7 +1948,7 @@
       fetchWeather();
       setInterval(updateClock, 1000);
       setInterval(updateCountdown, 1000);
-      setInterval(fetchWeather, 600000); // Refresh weather every 10 minutes
+      setInterval(fetchWeather, 600000);
     </script>
   </body>
 </html>
