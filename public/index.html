@@ -10,35 +10,40 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700&family=Work+Sans:wght@400;500;600&display=swap");
+
       :root {
-        --bg-primary: #0a0e17;
-        --bg-secondary: #111827;
-        --bg-tertiary: #1a2233;
-        --bg-surface: #1f2b3d;
-        --bg-hover: rgba(99, 179, 255, 0.06);
+        --bg-primary: #0b0d10;
+        --bg-secondary: #12161d;
+        --bg-tertiary: #1a202c;
+        --bg-surface: #1c2331;
+        --bg-hover: rgba(79, 182, 198, 0.08);
 
-        --border-default: rgba(255, 255, 255, 0.08);
-        --border-muted: rgba(255, 255, 255, 0.04);
+        --border-default: rgba(255, 255, 255, 0.1);
+        --border-muted: rgba(255, 255, 255, 0.05);
 
-        --text-primary: #f0f4f8;
-        --text-secondary: #94a3b8;
-        --text-tertiary: #64748b;
+        --text-primary: #f5f4ef;
+        --text-secondary: #b3bac4;
+        --text-tertiary: #7b8796;
 
-        --color-success: #34d399;
-        --color-warning: #fbbf24;
-        --color-danger: #f87171;
-        --color-info: #60a5fa;
+        --color-success: #3ddc97;
+        --color-warning: #f6c76a;
+        --color-danger: #f26d6d;
+        --color-info: #4fb6c6;
+        --color-accent: #f3b45b;
+        --color-transit: #2ecc71;
 
-        --gradient-accent: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa);
-        --gradient-warm: linear-gradient(135deg, #f59e0b, #ef4444);
-        --gradient-cool: linear-gradient(135deg, #3b82f6, #06b6d4);
+        --gradient-accent: linear-gradient(130deg, #f3b45b, #f08a5d, #4fb6c6);
+        --gradient-warm: linear-gradient(135deg, #f6c76a, #f28c5b);
+        --gradient-cool: linear-gradient(135deg, #4fb6c6, #2f8fa8);
 
         --time-now: #f87171;
         --time-soon: #fbbf24;
         --time-later: #34d399;
 
         --gutter: 24px;
-        --row-height: 56px;
+        --row-height: 64px;
+        --row-radius: 14px;
 
         --sticky-header-h: 0px;
       }
@@ -50,19 +55,12 @@
       }
 
       body {
-        font-family:
-          "SF Pro Display",
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          Roboto,
-          Helvetica,
-          Arial,
-          sans-serif;
+        font-family: "Work Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background: var(--bg-primary);
         background-image:
-          radial-gradient(ellipse at 20% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-          radial-gradient(ellipse at 80% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+          radial-gradient(1200px 600px at 10% -10%, rgba(243, 180, 91, 0.25), transparent 60%),
+          radial-gradient(900px 500px at 90% 10%, rgba(79, 182, 198, 0.22), transparent 60%),
+          radial-gradient(700px 500px at 50% 120%, rgba(240, 138, 93, 0.18), transparent 55%);
         background-attachment: fixed;
         color: var(--text-primary);
         min-height: 100vh;
@@ -70,10 +68,31 @@
         -moz-osx-font-smoothing: grayscale;
       }
 
+      body::after {
+        content: "";
+        position: fixed;
+        inset: -20%;
+        background: conic-gradient(
+          from 180deg at 50% 50%,
+          rgba(79, 182, 198, 0.12),
+          rgba(243, 180, 91, 0.15),
+          rgba(240, 138, 93, 0.12),
+          rgba(79, 182, 198, 0.1)
+        );
+        filter: blur(120px) saturate(140%);
+        opacity: 0.4;
+        pointer-events: none;
+        z-index: 0;
+        animation: auroraSpin 28s linear infinite;
+      }
+
+      @keyframes auroraSpin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
       .mono {
-        font-family:
-          ui-monospace, "SF Mono", "Cascadia Mono", "Segoe UI Mono",
-          "Roboto Mono", Menlo, Monaco, Consolas, monospace;
+        font-family: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Mono", "Segoe UI Mono", monospace;
         font-variant-numeric: tabular-nums;
       }
 
@@ -85,7 +104,7 @@
         right: 0;
         bottom: 0;
         pointer-events: none;
-        z-index: 0;
+        z-index: 1;
         overflow: hidden;
       }
 
@@ -230,19 +249,12 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 3px;
-        background: linear-gradient(
-          90deg,
-          #6366f1,
-          #8b5cf6,
-          #06b6d4,
-          #34d399,
-          #6366f1
-        );
+        height: 4px;
+        background: linear-gradient(90deg, #f3b45b, #4fb6c6, #f08a5d, #f3b45b);
         background-size: 300% 100%;
         animation: shimmer 6s ease-in-out infinite;
         z-index: 200;
-        box-shadow: 0 0 20px rgba(99, 102, 241, 0.3), 0 0 60px rgba(99, 102, 241, 0.1);
+        box-shadow: 0 0 24px rgba(243, 180, 91, 0.35), 0 0 60px rgba(79, 182, 198, 0.2);
       }
 
       @keyframes shimmer {
@@ -262,75 +274,265 @@
         z-index: 50;
       }
 
-      /* ─── Header ─── */
-      header {
-        background: rgba(10, 14, 23, 0.85);
-        backdrop-filter: blur(24px) saturate(180%);
-        -webkit-backdrop-filter: blur(24px) saturate(180%);
-        padding: 28px var(--gutter) 24px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      /* ─── Hero Header ─── */
+      header.hero {
+        padding: 26px var(--gutter) 18px;
         position: relative;
       }
 
-      .header-title-row {
+      header.hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(8, 12, 16, 0.72);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        z-index: 0;
+      }
+
+      .hero-panel {
         display: flex;
         align-items: center;
-        gap: 12px;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 20px 24px;
+        border-radius: 28px;
+        background: linear-gradient(135deg, rgba(12, 16, 24, 0.62), rgba(18, 24, 34, 0.48));
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(24px) saturate(170%);
+        -webkit-backdrop-filter: blur(24px) saturate(170%);
+        animation: heroReveal 0.9s ease both;
+        z-index: 1;
       }
 
-      .header-icon {
-        font-size: 2rem;
-        line-height: 1;
-        filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
+      @keyframes heroReveal {
+        from { opacity: 0; transform: translateY(14px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
-      .header-left h1 {
-        font-size: 1.7rem;
+      .hero-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 10% 20%, rgba(79, 182, 198, 0.25), transparent 55%),
+          radial-gradient(circle at 85% 10%, rgba(46, 204, 113, 0.18), transparent 55%),
+          radial-gradient(circle at 50% 120%, rgba(243, 180, 91, 0.12), transparent 60%);
+        opacity: 0.9;
+        pointer-events: none;
+      }
+
+      .hero-panel::after {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        pointer-events: none;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .brand-mark {
+        width: 74px;
+        height: 74px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, #ffe38a, #f3b45b 55%, #f08a5d 100%);
+        box-shadow:
+          0 16px 30px rgba(0, 0, 0, 0.4),
+          inset 0 2px 0 rgba(255,255,255,0.6);
+        position: relative;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.55);
+      }
+
+      .brand-mark::before {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border-radius: 50%;
+        border: 3px solid rgba(20, 28, 40, 0.85);
+        box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.28);
+        opacity: 0.98;
+      }
+
+      .brand-mark::after {
+        content: "";
+        position: absolute;
+        top: 72px;
+        width: 12px;
+        height: 20px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.4), rgba(18, 24, 34, 0.6));
+        box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+      }
+
+      .mark-letter {
+        font-family: "Sora", "Work Sans", sans-serif;
+        font-size: 2.05rem;
+        font-weight: 800;
+        color: #111722;
+        text-shadow:
+          0 2px 6px rgba(255,255,255,0.25),
+          0 0 12px rgba(255, 255, 255, 0.18);
+        position: relative;
+        z-index: 1;
+      }
+
+      .brand-mark .mark-gloss {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle at 25% 20%, rgba(255,255,255,0.55), transparent 40%);
+        opacity: 0.5;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .brand-title {
+        font-size: 1.9rem;
         font-weight: 700;
         letter-spacing: -0.02em;
-        background: linear-gradient(135deg, #f0f4f8 0%, #a5b4fc 100%);
+        font-family: "Sora", "Work Sans", sans-serif;
+        background: linear-gradient(135deg, #f7f1e8 0%, #f3b45b 55%, #4fb6c6 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
       }
 
-      .header-left .subtitle {
+      .brand-subtitle {
+        font-size: 0.8rem;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-top: 4px;
+      }
+
+      .hero-actions {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: auto auto;
+        gap: 12px 16px;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-actions .weather-widget {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+      }
+
+      .hero-actions .theme-toggle {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+        justify-self: start;
+      }
+
+      .clock-card {
+        grid-column: 2 / 3;
+        grid-row: 1 / 3;
+        padding: 10px 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+        text-align: right;
+      }
+
+      .clock-row {
         display: flex;
         align-items: center;
         gap: 10px;
+        justify-content: flex-end;
+      }
+
+      .clock {
+        font-size: 2.4rem;
+        font-weight: 300;
+        color: var(--text-primary);
+        line-height: 1;
+        letter-spacing: 0.04em;
+      }
+
+      .clock-date {
         font-size: 0.7rem;
         color: var(--text-tertiary);
-        margin-top: 6px;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        font-weight: 500;
+        margin-top: 4px;
       }
 
-      .subtitle-line {
-        flex: 0 0 24px;
-        height: 1px;
-        background: linear-gradient(90deg, var(--color-info), transparent);
+      .last-updated {
+        font-size: 0.62rem;
+        color: var(--text-tertiary);
+        margin-top: 2px;
       }
 
-      .subtitle-line:last-child {
-        background: linear-gradient(90deg, transparent, var(--color-info));
-        flex: 1;
+      .refresh-ring {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
       }
 
-      .header-divider {
-        width: 1px;
-        height: 40px;
-        background: linear-gradient(180deg, transparent, rgba(255,255,255,0.1), transparent);
+      .refresh-ring svg {
+        width: 28px;
+        height: 28px;
+        transform: rotate(-90deg);
       }
 
-      .header-right {
-        text-align: right;
-        display: flex;
+      .refresh-ring .ring-bg {
+        stroke: rgba(255, 255, 255, 0.12);
+      }
+
+      .refresh-ring .ring-progress {
+        stroke: var(--color-transit);
+        stroke-linecap: round;
+        filter: drop-shadow(0 0 4px rgba(46, 204, 113, 0.4));
+      }
+
+      .theme-toggle {
+        display: inline-flex;
         align-items: center;
-        gap: 20px;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .theme-toggle:hover {
+        border-color: rgba(79, 182, 198, 0.4);
+        color: var(--text-primary);
+        transform: translateY(-1px);
+      }
+
+      .theme-toggle .toggle-icon {
+        font-size: 1rem;
+        line-height: 1;
+      }
+
+      .theme-toggle.is-light {
+        background: rgba(243, 180, 91, 0.2);
+        border-color: rgba(243, 180, 91, 0.4);
+        color: #2a2216;
       }
 
       /* ─── Weather Widget ─── */
@@ -339,12 +541,12 @@
         align-items: center;
         gap: 10px;
         padding: 8px 14px;
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.06);
         backdrop-filter: blur(16px) saturate(180%);
         -webkit-backdrop-filter: blur(16px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255,255,255,0.08);
         opacity: 0;
         transition: opacity 0.5s ease;
       }
@@ -415,35 +617,16 @@
         gap: 6px;
       }
 
-      .status-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        display: inline-block;
-        flex-shrink: 0;
-      }
-
-      .status-dot.ok {
-        background: var(--color-success);
-        box-shadow: 0 0 6px var(--color-success), 0 0 12px rgba(52, 211, 153, 0.2);
-      }
-      .status-dot.error {
-        background: var(--color-danger);
-        box-shadow: 0 0 6px var(--color-danger), 0 0 12px rgba(248, 113, 113, 0.2);
-      }
-      .status-dot.loading {
-        background: var(--color-warning);
-        animation: pulse 1s infinite;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.3;
-        }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
 
       .error-msg {
@@ -456,6 +639,7 @@
         margin-left: auto;
         font-size: 0.7rem;
         color: var(--text-tertiary);
+        display: none;
       }
 
       .refresh-progress {
@@ -475,11 +659,21 @@
 
       /* ─── Filter Chips ─── */
       .filter-bar {
-        background: rgba(10, 14, 23, 0.8);
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        background: linear-gradient(135deg, rgba(12, 16, 24, 0.62), rgba(18, 24, 34, 0.48));
+        backdrop-filter: blur(20px) saturate(170%);
+        -webkit-backdrop-filter: blur(20px) saturate(170%);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.06);
         overflow: hidden;
+      }
+
+      .filter-bar::after {
+        content: "";
+        display: block;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(79, 182, 198, 0.4), rgba(46, 204, 113, 0.4), transparent);
+        opacity: 0.6;
       }
 
       .filter-chips {
@@ -489,6 +683,12 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
+        animation: chipsReveal 0.8s ease both;
+      }
+
+      @keyframes chipsReveal {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       .filter-chips::-webkit-scrollbar {
@@ -499,12 +699,12 @@
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        padding: 5px 12px;
+        padding: 7px 14px;
         border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.02);
         color: var(--text-secondary);
-        font-size: 0.72rem;
+        font-size: 0.78rem;
         font-weight: 500;
         cursor: pointer;
         white-space: nowrap;
@@ -515,16 +715,16 @@
       }
 
       .filter-chip:hover {
-        border-color: rgba(255, 255, 255, 0.15);
-        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.05);
         transform: translateY(-1px);
       }
 
       .filter-chip.active {
-        border-color: rgba(99, 102, 241, 0.5);
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
-        color: #c7d2fe;
-        box-shadow: 0 0 12px rgba(99, 102, 241, 0.2), 0 0 4px rgba(99, 102, 241, 0.1);
+        border-color: rgba(79, 182, 198, 0.35);
+        background: rgba(79, 182, 198, 0.12);
+        color: #d9f3f7;
+        box-shadow: none;
       }
 
       .filter-chip-dot {
@@ -532,7 +732,7 @@
         height: 8px;
         border-radius: 3px;
         flex-shrink: 0;
-        box-shadow: 0 0 6px currentColor;
+        box-shadow: none;
       }
 
       .filter-chip-all {
@@ -540,25 +740,65 @@
         letter-spacing: 0.03em;
       }
 
+      .filter-chip.favorited::after {
+        content: "★";
+        font-size: 0.65rem;
+        margin-left: 4px;
+        color: var(--color-accent);
+      }
+
+
       /* ─── Main Content ─── */
       main {
         padding: 0 var(--gutter) 80px;
         position: relative;
-        z-index: 1;
+        z-index: 2;
       }
 
       .departures-header {
         display: grid;
-        grid-template-columns: 72px 1fr 56px 100px 72px;
+        grid-template-columns: 88px 1fr 56px 100px 72px;
         gap: 0;
         padding: 14px 16px;
-        font-size: 0.68rem;
+        font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: var(--text-tertiary);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        background: rgba(255, 255, 255, 0.01);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 16px 16px 0 0;
+        margin-top: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .departures-header::after {
+        content: "";
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 0;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(79, 182, 198, 0.6), rgba(46, 204, 113, 0.6), rgba(243, 180, 91, 0.6));
+        opacity: 0.6;
+      }
+
+      .departures-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 160px;
+        left: -180px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+        animation: headerSweep 18s linear infinite;
+        opacity: 0.35;
+      }
+
+      @keyframes headerSweep {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(120%); }
       }
 
       .col-plat,
@@ -571,6 +811,43 @@
 
       .departures-list {
         position: relative;
+        border-radius: 0 0 18px 18px;
+        overflow: hidden;
+        background: rgba(10, 12, 16, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+        backdrop-filter: blur(10px) saturate(140%);
+        -webkit-backdrop-filter: blur(10px) saturate(140%);
+      }
+
+      .departures-list::before {
+        content: "";
+        position: absolute;
+        inset: -40% -10%;
+        background: radial-gradient(circle at 20% 30%, rgba(79, 182, 198, 0.15), transparent 55%),
+          radial-gradient(circle at 80% 60%, rgba(46, 204, 113, 0.12), transparent 55%);
+        opacity: 0.6;
+        animation: listGlow 20s ease-in-out infinite alternate;
+        pointer-events: none;
+      }
+
+      .departures-list::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.08), transparent),
+          radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.06), transparent),
+          radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.05), transparent);
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      
+
+      @keyframes listGlow {
+        from { transform: translateY(0); }
+        to { transform: translateY(40px); }
       }
 
       /* ─── Group Labels ─── */
@@ -584,6 +861,8 @@
         display: flex;
         align-items: center;
         gap: 12px;
+        position: relative;
+        z-index: 1;
       }
 
       .departure-group-label::after {
@@ -593,34 +872,123 @@
         background: linear-gradient(90deg, rgba(255,255,255,0.06), transparent);
       }
 
+
       .departures-list {
         transition: opacity 0.3s ease;
+      }
+
+      /* ─── Light Theme Overrides ─── */
+      body[data-theme="light"] {
+        --bg-primary: #f6f3ee;
+        --bg-secondary: #ffffff;
+        --bg-tertiary: #f0ece6;
+        --bg-surface: #ffffff;
+        --bg-hover: rgba(79, 182, 198, 0.14);
+
+        --border-default: rgba(19, 29, 43, 0.12);
+        --border-muted: rgba(19, 29, 43, 0.08);
+
+        --text-primary: #1c1f24;
+        --text-secondary: #3b4656;
+        --text-tertiary: #6b7788;
+      }
+
+      body[data-theme="light"] {
+        background-image:
+          radial-gradient(1200px 600px at 10% -10%, rgba(243, 180, 91, 0.22), transparent 60%),
+          radial-gradient(900px 500px at 90% 10%, rgba(79, 182, 198, 0.18), transparent 60%),
+          radial-gradient(700px 500px at 50% 120%, rgba(240, 138, 93, 0.16), transparent 55%);
+      }
+
+      body[data-theme="light"] .header-glow {
+        box-shadow: 0 0 18px rgba(243, 180, 91, 0.25), 0 0 40px rgba(79, 182, 198, 0.15);
+      }
+
+      body[data-theme="light"] header,
+      body[data-theme="light"] .filter-bar {
+        background: rgba(255, 255, 255, 0.8);
+      }
+
+      body[data-theme="light"] header.hero::before {
+        background: rgba(245, 242, 236, 0.75);
+      }
+
+      body[data-theme="light"] .hero-panel {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(246, 243, 238, 0.9));
+        border: 1px solid rgba(19, 29, 43, 0.08);
+        box-shadow: 0 24px 60px rgba(20, 30, 45, 0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+      }
+
+      body[data-theme="light"] .brand-subtitle {
+        color: #7b8796;
+      }
+
+      body[data-theme="light"] .clock-card {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(19, 29, 43, 0.12);
+      }
+
+      body[data-theme="light"] .weather-widget {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(19, 29, 43, 0.12);
+        box-shadow: 0 12px 28px rgba(20, 30, 45, 0.12);
+      }
+
+
+      body[data-theme="light"] .departures-list {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(19, 29, 43, 0.08);
+        box-shadow: 0 24px 60px rgba(20, 30, 45, 0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+      }
+
+      body[data-theme="light"] .departure-row {
+        background: rgba(255, 255, 255, 0.9);
+        border-bottom: 1px solid rgba(19, 29, 43, 0.08);
+      }
+
+      body[data-theme="light"] .departure-row:nth-child(even of .departure-row) {
+        background: rgba(246, 243, 238, 0.9);
+      }
+
+      body[data-theme="light"] footer {
+        background: linear-gradient(180deg, transparent 0%, rgba(246, 243, 238, 0.9) 50%);
       }
 
       /* ─── Departure Row ─── */
       .departure-row {
         display: grid;
-        grid-template-columns: 72px 1fr 56px 100px 72px;
+        grid-template-columns: 88px 1fr 56px 100px 72px;
         gap: 0;
         align-items: center;
         padding: 0 16px;
         height: var(--row-height);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         position: relative;
         overflow: hidden;
-        transition: background 0.25s ease, opacity 0.3s ease, border-color 0.25s ease;
+        transition: background 0.25s ease, opacity 0.3s ease, border-color 0.25s ease, transform 0.25s ease;
+        will-change: transform;
         animation: rowSlideIn 0.35s ease both;
+        background: rgba(15, 20, 28, 0.55);
+        border-left: 1px solid rgba(255, 255, 255, 0.04);
+        border-right: 1px solid rgba(255, 255, 255, 0.04);
+        z-index: 1;
       }
 
       .departure-row:hover {
-        background: rgba(99, 102, 241, 0.04);
+        background: rgba(79, 182, 198, 0.12);
+        border-color: rgba(79, 182, 198, 0.25);
+        transform: translateY(-1px);
+      }
+
+      .departure-row:hover .line-badge {
+        transform: translateY(-1px) scale(1.03);
       }
 
       .departure-row:nth-child(even of .departure-row) {
-        background: rgba(255, 255, 255, 0.01);
+        background: rgba(17, 23, 32, 0.62);
       }
       .departure-row:nth-child(even of .departure-row):hover {
-        background: rgba(99, 102, 241, 0.04);
+        background: rgba(79, 182, 198, 0.12);
       }
 
       @keyframes rowSlideIn {
@@ -637,8 +1005,8 @@
       .departure-row.imminent {
         border-left: 3px solid var(--time-now);
         padding-left: 13px;
-        background: rgba(248, 113, 113, 0.06);
-        box-shadow: inset 4px 0 12px rgba(248, 113, 113, 0.08);
+        background: linear-gradient(90deg, rgba(248, 113, 113, 0.18), rgba(15, 20, 28, 0.5));
+        box-shadow: inset 4px 0 12px rgba(248, 113, 113, 0.12);
       }
 
       .departure-row.schedule-only {
@@ -665,6 +1033,31 @@
         display: none;
       }
 
+      .line-cell {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .pin-btn {
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text-tertiary);
+        display: inline-grid;
+        place-items: center;
+        font-size: 0.7rem;
+        cursor: pointer;
+      }
+
+      .pin-btn.active {
+        color: #f7d35c;
+        border-color: rgba(247, 211, 92, 0.4);
+        background: rgba(247, 211, 92, 0.15);
+      }
+
       /* ─── Line Badge ─── */
       .line-badge {
         display: inline-flex;
@@ -673,7 +1066,7 @@
         min-width: 44px;
         height: 28px;
         padding: 0 10px;
-        border-radius: 6px;
+        border-radius: 10px;
         font-weight: 700;
         font-size: 0.85rem;
         text-align: center;
@@ -683,11 +1076,12 @@
         box-shadow:
           inset 0 1px 0 rgba(255, 255, 255, 0.25),
           inset 0 -1px 0 rgba(0, 0, 0, 0.15),
-          0 2px 8px rgba(0, 0, 0, 0.3),
-          0 0 12px rgba(0, 0, 0, 0.1);
+          0 6px 18px rgba(0, 0, 0, 0.35),
+          0 0 12px rgba(0, 0, 0, 0.12);
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         position: relative;
         overflow: hidden;
+        transition: transform 0.2s ease;
       }
 
       .line-badge::after {
@@ -698,11 +1092,37 @@
         right: 0;
         height: 50%;
         background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
-        border-radius: 6px 6px 0 0;
+        border-radius: 10px 10px 0 0;
         pointer-events: none;
       }
 
+      .line-badge.metallic {
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      .line-badge.metallic::before {
+        content: "";
+        position: absolute;
+        inset: -30% -60%;
+        background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.55) 50%, transparent 60%);
+        opacity: 0.5;
+        transform: translateX(-40%);
+        animation: metalSweep 4.5s ease-in-out infinite;
+      }
+
+      @keyframes metalSweep {
+        0%, 100% { transform: translateX(-40%); opacity: 0.2; }
+        50% { transform: translateX(40%); opacity: 0.7; }
+      }
+
       /* ─── Destination ─── */
+      .destination-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+      }
+
       .destination {
         font-weight: 500;
         color: var(--text-primary);
@@ -713,22 +1133,83 @@
         padding-right: 12px;
       }
 
+      .destination-muted {
+        color: var(--text-tertiary);
+        font-size: 0.85rem;
+      }
+
+      .service-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .service-badges:empty {
+        display: none;
+      }
+
+      .service-badge {
+        font-size: 0.55rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 2px 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text-secondary);
+      }
+
+      .service-badge.delay {
+        border-color: rgba(248, 113, 113, 0.35);
+        color: #f9b4b4;
+        background: rgba(248, 113, 113, 0.14);
+      }
+
+      .service-badge.disruption {
+        border-color: rgba(246, 199, 106, 0.35);
+        color: #ffe0a6;
+        background: rgba(246, 199, 106, 0.16);
+      }
+
+      .service-badge.cancelled {
+        border-color: rgba(248, 113, 113, 0.5);
+        color: #ffd0d0;
+        background: rgba(248, 113, 113, 0.22);
+      }
+
+      .service-badge.planned {
+        border-color: rgba(148, 163, 184, 0.3);
+        color: #cbd5e1;
+        background: rgba(148, 163, 184, 0.12);
+      }
+
       /* ─── Platform ─── */
       .platform {
         text-align: center;
         color: var(--text-secondary);
-        font-size: 0.8rem;
+        font-size: 0.95rem;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 4px;
       }
 
+      .platform.platform-changed {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #f7d35c;
+        background: rgba(247, 211, 92, 0.18);
+        border: 1px solid rgba(247, 211, 92, 0.35);
+        padding: 4px 8px;
+        border-radius: 999px;
+        justify-self: center;
+      }
+
       /* ─── Time Absolute ─── */
       .time-abs {
         text-align: center;
         color: var(--text-secondary);
-        font-size: 0.85rem;
+        font-size: 0.98rem;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -776,21 +1257,29 @@
 
       .delay-badge {
         display: inline-block;
-        font-size: 0.6rem;
+        font-size: 0.72rem;
         font-weight: 700;
-        color: var(--color-danger);
-        background: rgba(248, 113, 113, 0.12);
-        padding: 1px 5px;
-        border-radius: 4px;
+        color: #ffd0d0;
+        background: rgba(248, 113, 113, 0.2);
+        padding: 3px 7px;
+        border-radius: 7px;
         line-height: 1.2;
-        border: 1px solid rgba(248, 113, 113, 0.15);
+        border: 1px solid rgba(248, 113, 113, 0.35);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .delay-icon {
+        font-size: 0.8rem;
+        line-height: 1;
       }
 
       /* ─── Minutes Remaining ─── */
       .time-remaining {
         text-align: right;
         font-weight: 700;
-        font-size: 1.3rem;
+        font-size: 1.5rem;
         line-height: 1;
         position: relative;
         overflow: hidden;
@@ -908,7 +1397,7 @@
 
       .skeleton-row {
         display: grid;
-        grid-template-columns: 72px 1fr 56px 100px 72px;
+        grid-template-columns: 88px 1fr 56px 100px 72px;
         gap: 0;
         align-items: center;
         padding: 0 16px;
@@ -1063,16 +1552,18 @@
       @media (max-width: 768px) {
         :root {
           --gutter: 16px;
-          --row-height: 52px;
+          --row-height: 58px;
         }
         .clock {
           font-size: 2.2rem;
         }
-        .header-left h1 {
-          font-size: 1.4rem;
+        .brand-title {
+          font-size: 1.5rem;
         }
-        .header-icon {
-          font-size: 1.6rem;
+        .brand-mark {
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
         }
         .weather-desc {
           display: none;
@@ -1080,54 +1571,72 @@
 
       }
 
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+
       /* ─── Responsive: Mobile ─── */
       @media (max-width: 600px) {
         :root {
           --gutter: 12px;
-          --row-height: 48px;
+          --row-height: 54px;
         }
 
-        header {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 8px;
+        header.hero {
           padding: 16px var(--gutter) 12px;
         }
-
-        .header-right {
-          text-align: left;
+        .hero-panel {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+          padding: 18px;
+        }
+        .hero-actions {
           width: 100%;
           justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        .clock-card {
+          text-align: left;
         }
         .clock {
           font-size: 1.8rem;
         }
-        .header-left h1 {
+        .brand-title {
           font-size: 1.2rem;
-        }
-        .header-icon {
-          font-size: 1.4rem;
-        }
-        .header-divider {
-          display: none;
         }
         .clock-date {
           font-size: 0.65rem;
         }
 
+        .filter-bar-content {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 6px;
+        }
+        .filter-actions {
+          padding: 0 var(--gutter) 10px;
+          justify-content: space-between;
+        }
+
         .departures-header,
         .departure-row {
-          grid-template-columns: 52px 1fr 44px 72px 56px;
+          grid-template-columns: 64px 1fr 44px 72px 56px;
           padding: 0 8px;
         }
 
         .skeleton-row {
-          grid-template-columns: 52px 1fr 44px 72px 56px;
+          grid-template-columns: 64px 1fr 44px 72px 56px;
           padding: 0 8px;
         }
 
         .departures-header {
           padding: 10px 8px;
+          font-size: 0.72rem;
         }
 
         .line-badge {
@@ -1142,13 +1651,13 @@
           font-size: 0.85rem;
         }
         .time-remaining {
-          font-size: 1.05rem;
+          font-size: 1.2rem;
         }
         .time-abs {
-          font-size: 0.75rem;
+          font-size: 0.85rem;
         }
         .platform {
-          font-size: 0.7rem;
+          font-size: 0.82rem;
         }
         .min-label {
           font-size: 0.55rem;
@@ -1209,42 +1718,54 @@
     <div class="header-glow"></div>
 
     <div class="sticky-top">
-      <header>
-        <div class="header-left">
-          <div class="header-title-row">
-            <span class="header-icon">&#128653;</span>
-            <h1>Aachen Bushof</h1>
-          </div>
-          <div class="subtitle"><span class="subtitle-line"></span>Abfahrtsmonitor<span class="subtitle-line"></span></div>
-        </div>
-        <div class="header-right">
-          <div class="weather-widget" id="weatherWidget">
-            <span class="weather-icon" id="weatherIcon"></span>
-            <div>
-              <div class="weather-temp mono" id="weatherTemp"></div>
-              <div class="weather-desc" id="weatherDesc"></div>
+      <header class="hero">
+        <div class="hero-panel">
+          <div class="brand">
+            <div class="brand-mark" aria-hidden="true">
+              <span class="mark-letter">H</span>
+              <span class="mark-gloss"></span>
+            </div>
+            <div class="brand-text">
+              <div class="brand-title">Aachen Bushof</div>
+              <div class="brand-subtitle">Abfahrtsmonitor</div>
             </div>
           </div>
-          <div class="header-divider"></div>
-          <div class="clock-wrapper">
-            <div class="clock mono" id="clock"></div>
-            <div class="clock-date" id="clockDate"></div>
+          <div class="hero-actions">
+            <div class="weather-widget" id="weatherWidget">
+              <span class="weather-icon" id="weatherIcon"></span>
+              <div>
+                <div class="weather-temp mono" id="weatherTemp"></div>
+                <div class="weather-desc" id="weatherDesc"></div>
+              </div>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Theme wechseln">
+              <span class="toggle-icon" id="themeIcon">🌙</span>
+              <span id="themeLabel">Nacht</span>
+            </button>
+            <div class="clock-card">
+              <div class="clock-row">
+                <div class="clock mono" id="clock"></div>
+                <div class="refresh-ring" id="refreshRing" aria-hidden="true">
+                  <svg viewBox="0 0 36 36">
+                    <circle class="ring-bg" cx="18" cy="18" r="15" fill="none" stroke-width="3"></circle>
+                    <circle class="ring-progress" cx="18" cy="18" r="15" fill="none" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="94.2"></circle>
+                  </svg>
+                </div>
+              </div>
+              <div class="clock-date" id="clockDate"></div>
+              <div class="last-updated" id="lastUpdated"></div>
+            </div>
           </div>
         </div>
       </header>
 
       <div class="status-bar">
         <div class="status-bar-content">
-          <span class="status-indicator">
-            <span class="status-dot loading" id="statusDot"></span>
-            <span id="statusText">Verbinde...</span>
+          <span class="status-indicator" id="statusIndicator" aria-live="polite">
+            <span id="statusText" class="sr-only"></span>
           </span>
 
           <span class="error-msg" id="errorMsg"></span>
-          <span class="refresh-info mono" id="countdown"></span>
-        </div>
-        <div class="refresh-progress">
-          <div class="refresh-progress-bar" id="progressBar"></div>
         </div>
       </div>
 
@@ -1275,16 +1796,16 @@
       </div>
     </main>
 
-    <div class="shortcut-overlay" id="shortcutOverlay">
-      <div class="shortcut-card">
-        <h3>Tastenkombinationen</h3>
-        <div class="shortcut-row"><span>Aktualisieren</span><span class="shortcut-key mono">R</span></div>
-        <div class="shortcut-row"><span>Alle Filter zurücksetzen</span><span class="shortcut-key mono">A</span></div>
-        <div class="shortcut-row"><span>Linie 1-9 filtern</span><span class="shortcut-key mono">1-9</span></div>
+      <div class="shortcut-overlay" id="shortcutOverlay">
+        <div class="shortcut-card">
+          <h3>Tastenkombinationen</h3>
+          <div class="shortcut-row"><span>Aktualisieren</span><span class="shortcut-key mono">R</span></div>
+          <div class="shortcut-row"><span>Alle Filter zurücksetzen</span><span class="shortcut-key mono">A</span></div>
+          <div class="shortcut-row"><span>Linie 1-9 filtern</span><span class="shortcut-key mono">1-9</span></div>
 
-        <div class="shortcut-row"><span>Hilfe schließen</span><span class="shortcut-key mono">Esc</span></div>
+          <div class="shortcut-row"><span>Hilfe schließen</span><span class="shortcut-key mono">Esc</span></div>
+        </div>
       </div>
-    </div>
 
     <footer>
       <span>Datenquelle: AVV / ASEAG &middot; Aktualisierung alle 30s<span class="footer-hint">&middot; <kbd>?</kbd> Tastenkürzel</span></span>
@@ -1390,11 +1911,75 @@
       let departures = [];
       let lastKeys = "";
       let lastMinValues = {};
+      let renderedItems = [];
       let countdownSeconds = REFRESH_INTERVAL;
       let errorMessage = null;
       let isLoading = true;
       let activeFilters = new Set();
       let weatherData = null;
+      let favoriteLines = new Set();
+      let lastPlatformByKey = new Map();
+      let lastUpdatedAt = null;
+
+      // ─── Theme Toggle ───
+      function applyTheme(theme) {
+        const toggle = document.getElementById("themeToggle");
+        const icon = document.getElementById("themeIcon");
+        const label = document.getElementById("themeLabel");
+        document.body.dataset.theme = theme;
+        if (theme === "light") {
+          toggle.classList.add("is-light");
+          icon.textContent = "☀️";
+          label.textContent = "Tag";
+        } else {
+          toggle.classList.remove("is-light");
+          icon.textContent = "🌙";
+          label.textContent = "Nacht";
+        }
+      }
+
+      function initThemeToggle() {
+        const savedTheme = localStorage.getItem("themePreference");
+        const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+        const initialTheme = savedTheme || (prefersLight ? "light" : "dark");
+        applyTheme(initialTheme);
+
+        const toggle = document.getElementById("themeToggle");
+        toggle.addEventListener("click", () => {
+          const nextTheme = document.body.dataset.theme === "light" ? "dark" : "light";
+          localStorage.setItem("themePreference", nextTheme);
+          applyTheme(nextTheme);
+        });
+      }
+
+      // ─── Refresh Ring ───
+      function setRefreshRing(pct) {
+        const ring = document.querySelector(".ring-progress");
+        if (!ring) return;
+        const radius = 15;
+        const circumference = 2 * Math.PI * radius;
+        ring.style.strokeDasharray = `${circumference}`;
+        ring.style.strokeDashoffset = `${circumference * (1 - pct)}`;
+      }
+
+      // ─── Favorites ───
+      function saveFavorites() {
+        try {
+          localStorage.setItem("favoriteLines", JSON.stringify([...favoriteLines]));
+        } catch (e) {}
+      }
+
+      function toggleFavorite(line) {
+        if (favoriteLines.has(line)) {
+          favoriteLines.delete(line);
+        } else {
+          favoriteLines.add(line);
+        }
+        saveFavorites();
+        renderFilterChips();
+        lastKeys = "";
+        renderDepartures();
+      }
 
 
       // ─── Restore state from localStorage ───
@@ -1406,6 +1991,15 @@
         }
 
       } catch (e) {}
+
+      try {
+        const savedFav = localStorage.getItem("favoriteLines");
+        if (savedFav) {
+          const parsedFav = JSON.parse(savedFav);
+          if (Array.isArray(parsedFav)) favoriteLines = new Set(parsedFav);
+        }
+      } catch (e) {}
+
 
       function getLineColor(line) {
         return LINE_COLORS[line] || DEFAULT_COLOR;
@@ -1540,7 +2134,8 @@
 
         for (const [line, color] of lines) {
           const isActive = activeFilters.has(line);
-          html += `<button class="filter-chip${isActive ? " active" : ""}" data-line="${escapeHtml(line)}">
+          const isFav = favoriteLines.has(line);
+          html += `<button class="filter-chip${isActive ? " active" : ""}${isFav ? " favorited" : ""}" data-line="${escapeHtml(line)}">
             <span class="filter-chip-dot" style="background:${color}"></span>
             ${escapeHtml(line)}
           </button>`;
@@ -1573,23 +2168,46 @@
         toggleFilter(chip.dataset.line);
       });
 
+      document.getElementById("departures").addEventListener("click", (e) => {
+        const btn = e.target.closest(".pin-btn");
+        if (!btn) return;
+        toggleFavorite(btn.dataset.line);
+      });
+
       function applyFilters() {
         const rows = document.querySelectorAll(".departure-row");
         rows.forEach((row) => {
           if (activeFilters.size === 0) {
-            row.classList.remove("filtered-out");
+            row.classList.toggle("filtered-out", false);
           } else {
             const line = row.dataset.line;
-            row.classList.toggle("filtered-out", !activeFilters.has(line));
+            const lineOk = activeFilters.has(line);
+            row.classList.toggle("filtered-out", !lineOk);
           }
         });
+        updateGroupVisibility();
       }
 
       function isPassingFilter(dep) {
-        return activeFilters.size === 0 || activeFilters.has(dep.line);
+        return (activeFilters.size === 0 || activeFilters.has(dep.line));
       }
 
-
+      function updateGroupVisibility() {
+        const container = document.getElementById("departures");
+        const sectionLabels = container.querySelectorAll(".departure-group-label");
+        sectionLabels.forEach((label) => {
+          let el = label.nextElementSibling;
+          let hasVisible = false;
+          while (el && !el.classList.contains("departure-group-label")) {
+            if (el.classList.contains("departure-row") && !el.classList.contains("filtered-out")) {
+              hasVisible = true;
+              break;
+            }
+            el = el.nextElementSibling;
+          }
+          label.style.display = hasVisible ? "flex" : "none";
+        });
+      }
 
       // ─── Progress Bar Color ───
       function getProgressColor(minutes) {
@@ -1621,8 +2239,37 @@
         return html;
       }
 
+      function getServiceBadges(dep, delayMin) {
+        const badges = [];
+        const destLower = (dep.destination || "").toLowerCase();
+
+        if (dep.isCancelled) {
+          badges.push({ label: "Ausfall", cls: "cancelled" });
+          return badges;
+        }
+
+        if (delayMin >= 10) {
+          badges.push({ label: "Störung", cls: "disruption" });
+        } else if (delayMin >= 5) {
+          badges.push({ label: "Verspätet", cls: "delay" });
+        }
+
+        if (!dep.isRealtime) {
+          badges.push({ label: "Plan", cls: "planned" });
+        }
+
+        if (destLower.includes("ersatz")) {
+          badges.push({ label: "Ersatzverkehr", cls: "disruption" });
+        }
+        if (destLower.includes("umleit")) {
+          badges.push({ label: "Umleitung", cls: "disruption" });
+        }
+
+        return badges;
+      }
+
       // ─── Build Row ───
-      function buildRow(d, index, isImminent) {
+      function buildRow(d, index, isImminent, hideDestination = false) {
         const mins = getMinutesRemaining(d.departureTimeMs);
         const timeClass = getTimeClass(mins);
         const color = getLineColor(d.line);
@@ -1644,7 +2291,7 @@
           <span class="time-realtime">
             ${d.isRealtime ? '<span class="realtime-dot"></span>' : '<span class="schedule-icon"></span>'}
             <span class="mono">${formatTime(d.departureTimeMs)}</span>
-            <span class="delay-badge">+${delayMin}</span>
+            <span class="delay-badge"><span class="delay-icon">⏱</span>+${delayMin}</span>
           </span>`;
         } else {
           timeContent = `
@@ -1672,11 +2319,25 @@
         const progressW = d.isCancelled ? 0 : getProgressWidth(mins);
         const progressC = getProgressColor(mins);
 
+        const key = `${d.line}::${d.destination}`;
+        const prevPlatform = lastPlatformByKey.get(key);
+        const platformChanged = prevPlatform && d.platform && prevPlatform !== d.platform;
 
-        return `<div class="departure-row${imminentClass}${scheduleClass}${cancelledClass}${filterClass}" style="animation-delay:${delay}s" data-key="${escapeHtml(d.line)}-${d.departureTimeMs}" data-line="${escapeHtml(d.line)}" data-dep-ms="${d.departureTimeMs}">
-        <div><span class="line-badge" style="background:${color}">${escapeHtml(d.line)}</span></div>
-        <div class="destination">${escapeHtml(d.destination)}</div>
-        <div class="platform mono">${escapeHtml(d.platform || "")}</div>
+        const badges = getServiceBadges(d, delayMin);
+        const badgesHtml = `<div class="service-badges">${badges
+          .map((b) => `<span class="service-badge ${b.cls}">${b.label}</span>`)
+          .join("")}</div>`;
+
+        return `<div class="departure-row${imminentClass}${scheduleClass}${cancelledClass}${filterClass}" style="animation-delay:${delay}s" data-key="${escapeHtml(d.line)}-${d.departureTimeMs}" data-line="${escapeHtml(d.line)}" data-destination="${escapeHtml(d.destination)}" data-platform="${escapeHtml(d.platform || "")}" data-is-realtime="${d.isRealtime}" data-is-cancelled="${d.isCancelled}" data-dep-ms="${d.departureTimeMs}">
+        <div class="line-cell">
+          <button class="pin-btn${favoriteLines.has(d.line) ? " active" : ""}" data-line="${escapeHtml(d.line)}" aria-label="Linie ${escapeHtml(d.line)} anpinnen">★</button>
+          <span class="line-badge metallic" style="background:${color}">${escapeHtml(d.line)}</span>
+        </div>
+        <div class="destination-cell">
+          <div class="destination${hideDestination ? " destination-muted" : ""}"${hideDestination ? ` aria-label="Ziel: ${escapeHtml(d.destination)}"` : ""}>${hideDestination ? "—" : escapeHtml(d.destination)}</div>
+          ${badgesHtml}
+        </div>
+        <div class="platform mono${platformChanged ? " platform-changed" : ""}">${escapeHtml(d.platform || "")}</div>
         <div class="time-abs">${timeContent}</div>
         <div class="time-remaining mono ${d.isCancelled ? '' : timeClass}" data-mins="${mins}">${minsContent}</div>
         <div class="row-progress" style="width:${progressW}%;background:${progressC}"></div>
@@ -1714,20 +2375,23 @@
           let html = "";
           let rowIndex = 0;
 
-          if (imminent.length > 0) {
+          const orderedImminent = orderByFavorites(imminent);
+          const orderedLater = orderByFavorites(later);
+          renderedItems = [...orderedImminent, ...orderedLater];
+
+          if (orderedImminent.length > 0) {
             html += '<div class="departure-group-label">Jetzt abfahrend</div>';
-            imminent.forEach((d) => {
-              html += buildRow(d, rowIndex++, true);
+            orderedImminent.forEach((d) => {
+              html += buildRow(d, rowIndex++, true, false);
             });
           }
 
-          if (later.length > 0 && imminent.length > 0) {
-            html +=
-              '<div class="departure-group-label">Nächste Abfahrten</div>';
+          if (orderedLater.length > 0 && orderedImminent.length > 0) {
+            html += '<div class="departure-group-label">Nächste Abfahrten</div>';
           }
 
-          later.forEach((d) => {
-            html += buildRow(d, rowIndex++, false);
+          orderedLater.forEach((d) => {
+            html += buildRow(d, rowIndex++, false, false);
           });
 
           container.style.opacity = "0";
@@ -1741,14 +2405,20 @@
               const key = `${d.line}-${d.departureTimeMs}`;
               lastMinValues[key] = getMinutesRemaining(d.departureTimeMs);
             });
+            lastPlatformByKey = new Map(
+              items
+                .filter((d) => d.platform)
+                .map((d) => [`${d.line}::${d.destination}`, d.platform]),
+            );
             container.style.opacity = "1";
             renderFilterChips();
+            updateGroupVisibility();
     
           }, 300);
         } else {
           const rows = container.querySelectorAll(".departure-row");
           let idx = 0;
-          items.forEach((d) => {
+          renderedItems.forEach((d) => {
             if (idx >= rows.length) return;
             const row = rows[idx];
 
@@ -1761,6 +2431,8 @@
             const timeClass = getTimeClass(mins);
             const minEl = row.querySelector(".time-remaining");
             const prevMins = parseInt(minEl.dataset.mins);
+            const platformEl = row.querySelector(".platform");
+            const badgeEl = row.querySelector(".service-badges");
 
             if (mins <= 0) {
               minEl.innerHTML = '<span class="time-now-badge">jetzt</span>';
@@ -1776,11 +2448,33 @@
             }
             minEl.dataset.mins = mins;
 
+            if (badgeEl) {
+              const delayMin =
+                d.scheduledTimeMs && d.departureTimeMs !== d.scheduledTimeMs
+                  ? Math.round((d.departureTimeMs - d.scheduledTimeMs) / 60000)
+                  : 0;
+              const badges = getServiceBadges(d, delayMin);
+              badgeEl.innerHTML = badges
+                .map((b) => `<span class="service-badge ${b.cls}">${b.label}</span>`)
+                .join("");
+            }
+
+            if (platformEl) {
+              const prevPlat = row.dataset.platform || "";
+              const newPlat = d.platform || "";
+              if (prevPlat !== newPlat) {
+                const key = `${d.line}::${d.destination}`;
+                const lastPlat = lastPlatformByKey.get(key);
+                const changed = lastPlat && newPlat && lastPlat !== newPlat;
+                platformEl.textContent = newPlat;
+                platformEl.classList.toggle("platform-changed", changed);
+                row.dataset.platform = newPlat;
+                if (newPlat) lastPlatformByKey.set(key, newPlat);
+              }
+            }
+
             if (mins <= 2 && !row.classList.contains("imminent")) {
               row.classList.add("imminent");
-              row.style.borderLeft = "3px solid var(--time-now)";
-              row.style.paddingLeft = "13px";
-              row.style.background = "rgba(248, 81, 73, 0.04)";
             }
 
             // Update progress bar
@@ -1794,6 +2488,17 @@
           });
   
         }
+      }
+
+      function orderByFavorites(list) {
+        if (!favoriteLines.size) return list;
+        const fav = [];
+        const rest = [];
+        list.forEach((d) => {
+          if (favoriteLines.has(d.line)) fav.push(d);
+          else rest.push(d);
+        });
+        return [...fav, ...rest];
       }
 
       async function fetchDepartures() {
@@ -1813,17 +2518,12 @@
           departures = data.departures || [];
           isLoading = false;
           countdownSeconds = REFRESH_INTERVAL;
+          lastUpdatedAt = data.fetchedAt ? new Date(data.fetchedAt) : new Date();
           renderDepartures();
           updateStatus();
+          updateLastUpdated();
 
-          const bar = document.getElementById("progressBar");
-          bar.style.transition = "none";
-          bar.style.transform = "scaleX(1)";
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              bar.style.transition = "transform 1s linear";
-            });
-          });
+          setRefreshRing(1);
         } catch (err) {
           isLoading = false;
           errorMessage = "Verbindung zum Server fehlgeschlagen";
@@ -1846,20 +2546,32 @@
           });
       }
 
+      function updateLastUpdated() {
+        const el = document.getElementById("lastUpdated");
+        if (!el || !lastUpdatedAt) return;
+        el.textContent = `Aktualisiert ${lastUpdatedAt.toLocaleTimeString("de-DE", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })}`;
+      }
+
       function updateStatus() {
-        const dot = document.getElementById("statusDot");
         const text = document.getElementById("statusText");
+        const indicator = document.getElementById("statusIndicator");
         const errEl = document.getElementById("errorMsg");
 
         if (isLoading) {
-          dot.className = "status-dot loading";
           text.textContent = "Lade Daten...";
         } else if (errorMessage) {
-          dot.className = "status-dot error";
           text.textContent = "Fehler";
         } else {
-          dot.className = "status-dot ok";
-          text.textContent = "Verbunden";
+          text.textContent = "";
+        }
+
+        if (indicator) {
+          const label = text.textContent || (errorMessage ? "Fehler" : isLoading ? "Lade Daten..." : "OK");
+          indicator.setAttribute("aria-label", label);
         }
 
         errEl.textContent = errorMessage || "";
@@ -1868,10 +2580,7 @@
       function updateCountdown() {
         countdownSeconds--;
         const pct = Math.max(0, countdownSeconds / REFRESH_INTERVAL);
-        document.getElementById("progressBar").style.transform =
-          `scaleX(${pct})`;
-        document.getElementById("countdown").textContent =
-          `${countdownSeconds}s`;
+        setRefreshRing(pct);
 
         if (countdownSeconds <= 0) {
           fetchDepartures();
@@ -1890,7 +2599,7 @@
 
         const overlay = document.getElementById("shortcutOverlay");
 
-        if (e.key === "?" || (e.key === "/" && !e.shiftKey)) {
+        if (e.key === "?" ) {
           e.preventDefault();
           overlay.classList.toggle("visible");
           return;
@@ -1917,6 +2626,7 @@
 
 
 
+
         // Number keys 1-9 toggle first 9 line filters
         const num = parseInt(e.key);
         if (num >= 1 && num <= 9) {
@@ -1926,6 +2636,7 @@
             toggleFilter(lines[num - 1][0]);
           }
         }
+
       });
 
       // Close overlay on backdrop click
@@ -1943,6 +2654,8 @@
       }
 
       // Init
+      initThemeToggle();
+      setRefreshRing(1);
       updateClock();
       fetchDepartures();
       fetchWeather();
