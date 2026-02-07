@@ -250,11 +250,11 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #f3b45b, #4fb6c6, #f08a5d, #f3b45b);
+        background: linear-gradient(90deg, #3fb6a8, #f2a44c, #2f8fa8, #3fb6a8);
         background-size: 300% 100%;
         animation: shimmer 6s ease-in-out infinite;
         z-index: 200;
-        box-shadow: 0 0 24px rgba(243, 180, 91, 0.35), 0 0 60px rgba(79, 182, 198, 0.2);
+        box-shadow: 0 0 24px rgba(63, 182, 168, 0.3), 0 0 60px rgba(242, 164, 76, 0.2);
       }
 
       @keyframes shimmer {
@@ -297,8 +297,8 @@
         gap: 24px;
         padding: 20px 24px;
         border-radius: 28px;
-        background: linear-gradient(135deg, rgba(12, 16, 24, 0.62), rgba(18, 24, 34, 0.48));
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: linear-gradient(135deg, rgba(12, 22, 28, 0.78), rgba(16, 30, 32, 0.62));
+        border: 1px solid rgba(255, 255, 255, 0.12);
         box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
         position: relative;
         overflow: hidden;
@@ -318,9 +318,9 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(circle at 10% 20%, rgba(79, 182, 198, 0.25), transparent 55%),
-          radial-gradient(circle at 85% 10%, rgba(46, 204, 113, 0.18), transparent 55%),
-          radial-gradient(circle at 50% 120%, rgba(243, 180, 91, 0.12), transparent 60%);
+          radial-gradient(circle at 12% 20%, rgba(63, 182, 168, 0.28), transparent 55%),
+          radial-gradient(circle at 85% 10%, rgba(242, 164, 76, 0.2), transparent 55%),
+          radial-gradient(circle at 50% 120%, rgba(47, 143, 168, 0.18), transparent 60%);
         opacity: 0.9;
         pointer-events: none;
       }
@@ -343,61 +343,80 @@
       }
 
       .brand-mark {
-        width: 74px;
-        height: 74px;
+        width: 76px;
+        height: 76px;
         border-radius: 50%;
-        background: radial-gradient(circle at 30% 30%, #ffe38a, #f3b45b 55%, #f08a5d 100%);
+        background:
+          radial-gradient(circle at 35% 30%, #f7d79a 0%, #eab84e 35%, #cc9226 68%, #a96a07 100%);
         box-shadow:
-          0 16px 30px rgba(0, 0, 0, 0.4),
-          inset 0 2px 0 rgba(255,255,255,0.6);
+          0 16px 34px rgba(0, 0, 0, 0.45),
+          inset 0 2px 6px rgba(255,255,255,0.65),
+          inset 0 -8px 14px rgba(0,0,0,0.3);
         position: relative;
         display: grid;
         place-items: center;
         overflow: hidden;
-        border: 2px solid rgba(255, 255, 255, 0.55);
+        border: 2px solid rgba(20, 28, 40, 0.9);
       }
 
       .brand-mark::before {
         content: "";
         position: absolute;
-        inset: 7px;
+        inset: 6px;
         border-radius: 50%;
-        border: 3px solid rgba(20, 28, 40, 0.85);
-        box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.28);
-        opacity: 0.98;
+        border: 3px solid rgba(255, 255, 255, 0.75);
+        box-shadow:
+          inset 0 0 0 4px rgba(20, 28, 40, 0.3),
+          inset 0 2px 8px rgba(255,255,255,0.45);
+        opacity: 0.95;
       }
 
       .brand-mark::after {
         content: "";
         position: absolute;
-        top: 72px;
-        width: 12px;
-        height: 20px;
-        border-radius: 999px;
-        background: linear-gradient(180deg, rgba(255,255,255,0.4), rgba(18, 24, 34, 0.6));
-        box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+        inset: -20%;
+        background: conic-gradient(from 210deg, rgba(255,255,255,0.22), transparent 38%, rgba(255,255,255,0.28), transparent 72%);
+        opacity: 0.85;
+        transform: rotate(-8deg);
       }
 
       .mark-letter {
         font-family: "Sora", "Work Sans", sans-serif;
         font-size: 2.05rem;
-        font-weight: 800;
-        color: #111722;
+        font-weight: 900;
+        color: #161d25;
         text-shadow:
-          0 2px 6px rgba(255,255,255,0.25),
-          0 0 12px rgba(255, 255, 255, 0.18);
+          0 2px 0 rgba(255,255,255,0.6),
+          0 7px 12px rgba(0,0,0,0.4);
         position: relative;
-        z-index: 1;
+        z-index: 2;
       }
 
       .brand-mark .mark-gloss {
         position: absolute;
         inset: 0;
         border-radius: 50%;
-        background: radial-gradient(circle at 25% 20%, rgba(255,255,255,0.55), transparent 40%);
-        opacity: 0.5;
+        background:
+          radial-gradient(circle at 22% 16%, rgba(255,255,255,0.9), transparent 38%),
+          linear-gradient(135deg, rgba(255,255,255,0.45), transparent 55%);
+        opacity: 0.7;
         pointer-events: none;
-        z-index: 1;
+        z-index: 3;
+      }
+
+      .brand-mark .mark-gloss::after {
+        content: "";
+        position: absolute;
+        inset: -20%;
+        background: linear-gradient(120deg, transparent 38%, rgba(255,255,255,0.75) 50%, transparent 62%);
+        opacity: 0.85;
+        transform: translateX(-40%);
+        animation: logoShine 5s ease-in-out infinite;
+      }
+
+      @keyframes logoShine {
+        0%, 100% { transform: translateX(-45%); opacity: 0.3; }
+        50% { transform: translateX(45%); opacity: 1; }
       }
 
       .brand-title {
@@ -405,10 +424,36 @@
         font-weight: 700;
         letter-spacing: -0.02em;
         font-family: "Sora", "Work Sans", sans-serif;
-        background: linear-gradient(135deg, #f7f1e8 0%, #f3b45b 55%, #4fb6c6 100%);
+        background: linear-gradient(135deg, #eaf4f6 0%, #cfe3ee 55%, #9fb8c7 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+      }
+
+      .brand-plaque {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04));
+        color: #d8e2ea;
+        font-size: 0.62rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.4),
+          inset 0 -1px 0 rgba(0,0,0,0.25);
+      }
+
+      .brand-plaque::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #2f8fa8;
+        box-shadow: none;
       }
 
       .brand-subtitle {
@@ -420,85 +465,17 @@
       }
 
       .hero-actions {
-        display: grid;
-        grid-template-columns: auto auto;
-        grid-template-rows: auto auto;
-        gap: 12px 16px;
-        align-items: center;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
         position: relative;
         z-index: 1;
-      }
-
-      .hero-actions .weather-widget {
-        grid-column: 1 / 2;
-        grid-row: 1 / 2;
-      }
-
-      .hero-actions .theme-toggle {
-        grid-column: 1 / 2;
-        grid-row: 2 / 3;
-        justify-self: start;
-      }
-
-      .clock-card {
-        grid-column: 2 / 3;
-        grid-row: 1 / 3;
-        padding: 10px 14px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.04);
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-        text-align: right;
-      }
-
-      .clock-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        justify-content: flex-end;
-      }
-
-      .clock {
-        font-size: 2.4rem;
-        font-weight: 300;
-        color: var(--text-primary);
-        line-height: 1;
-        letter-spacing: 0.04em;
-      }
-
-      .clock-date {
-        font-size: 0.7rem;
-        color: var(--text-tertiary);
-        margin-top: 4px;
       }
 
       .last-updated {
         font-size: 0.62rem;
         color: var(--text-tertiary);
-        margin-top: 2px;
-      }
-
-      .refresh-ring {
-        width: 28px;
-        height: 28px;
-        display: grid;
-        place-items: center;
-      }
-
-      .refresh-ring svg {
-        width: 28px;
-        height: 28px;
-        transform: rotate(-90deg);
-      }
-
-      .refresh-ring .ring-bg {
-        stroke: rgba(255, 255, 255, 0.12);
-      }
-
-      .refresh-ring .ring-progress {
-        stroke: var(--color-transit);
-        stroke-linecap: round;
-        filter: drop-shadow(0 0 4px rgba(46, 204, 113, 0.4));
       }
 
       .theme-toggle {
@@ -535,64 +512,7 @@
         color: #2a2216;
       }
 
-      /* ─── Weather Widget ─── */
-      .weather-widget {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 14px;
-        background: rgba(255, 255, 255, 0.06);
-        backdrop-filter: blur(16px) saturate(180%);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 12px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255,255,255,0.08);
-        opacity: 0;
-        transition: opacity 0.5s ease;
-      }
-
-      .weather-widget.loaded {
-        opacity: 1;
-      }
-
-      .weather-icon {
-        font-size: 1.5rem;
-        line-height: 1;
-      }
-
-      .weather-temp {
-        font-size: 1.15rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        line-height: 1;
-      }
-
-      .weather-desc {
-        font-size: 0.65rem;
-        color: var(--text-tertiary);
-        line-height: 1.2;
-        max-width: 60px;
-      }
-
-      .clock-wrapper {
-        text-align: right;
-      }
-
-      .clock {
-        font-size: 2.8rem;
-        font-weight: 200;
-        color: var(--text-primary);
-        line-height: 1;
-        letter-spacing: 0.04em;
-        text-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
-      }
-
-      .clock-date {
-        font-size: 0.72rem;
-        color: var(--text-tertiary);
-        margin-top: 4px;
-        letter-spacing: 0.03em;
-      }
+      
 
       /* ─── Status Bar ─── */
       .status-bar {
@@ -888,9 +808,9 @@
         --border-default: rgba(19, 29, 43, 0.12);
         --border-muted: rgba(19, 29, 43, 0.08);
 
-        --text-primary: #1c1f24;
-        --text-secondary: #3b4656;
-        --text-tertiary: #6b7788;
+        --text-primary: #141a21;
+        --text-secondary: #2f3a46;
+        --text-tertiary: #5b6776;
       }
 
       body[data-theme="light"] {
@@ -910,48 +830,96 @@
       }
 
       body[data-theme="light"] header.hero::before {
-        background: rgba(245, 242, 236, 0.75);
+        background: rgba(244, 242, 238, 0.82);
       }
 
       body[data-theme="light"] .hero-panel {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(246, 243, 238, 0.9));
-        border: 1px solid rgba(19, 29, 43, 0.08);
-        box-shadow: 0 24px 60px rgba(20, 30, 45, 0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(244, 241, 236, 0.95));
+        border: 1px solid rgba(19, 29, 43, 0.12);
+        box-shadow: 0 24px 60px rgba(20, 30, 45, 0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+      }
+
+      body[data-theme="light"] .brand-mark {
+        background: radial-gradient(circle at 35% 30%, #f7d79a 0%, #eab84e 35%, #cc9226 68%, #a96a07 100%);
+        border: 2px solid rgba(20, 28, 40, 0.9);
+        box-shadow: 0 8px 18px rgba(20, 30, 45, 0.14), inset 0 2px 6px rgba(255,255,255,0.75), inset 0 -6px 10px rgba(0,0,0,0.2);
+      }
+
+      body[data-theme="light"] .brand-mark::after {
+        background: conic-gradient(from 210deg, rgba(255,255,255,0.22), transparent 38%, rgba(255,255,255,0.28), transparent 72%);
+      }
+
+      body[data-theme="light"] .mark-letter {
+        color: #1b222b;
+        text-shadow:
+          0 2px 0 rgba(255,255,255,0.5),
+          0 4px 8px rgba(0,0,0,0.2);
+      }
+
+      body[data-theme="light"] .brand-plaque {
+        background: rgba(255,255,255,0.7);
+        border: 1px solid rgba(19, 29, 43, 0.16);
+        color: #2f3a46;
       }
 
       body[data-theme="light"] .brand-subtitle {
-        color: #7b8796;
+        color: #384654;
       }
 
-      body[data-theme="light"] .clock-card {
-        background: rgba(255, 255, 255, 0.8);
-        border: 1px solid rgba(19, 29, 43, 0.12);
-      }
-
-      body[data-theme="light"] .weather-widget {
-        background: rgba(255, 255, 255, 0.85);
-        border: 1px solid rgba(19, 29, 43, 0.12);
-        box-shadow: 0 12px 28px rgba(20, 30, 45, 0.12);
+      body[data-theme="light"] .brand-title {
+        background: none;
+        -webkit-text-fill-color: #18222c;
+        color: #18222c;
       }
 
 
       body[data-theme="light"] .departures-list {
-        background: rgba(255, 255, 255, 0.8);
-        border: 1px solid rgba(19, 29, 43, 0.08);
-        box-shadow: 0 24px 60px rgba(20, 30, 45, 0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(19, 29, 43, 0.12);
+        box-shadow: 0 20px 50px rgba(20, 30, 45, 0.08), inset 0 1px 0 rgba(255,255,255,0.8);
       }
 
       body[data-theme="light"] .departure-row {
-        background: rgba(255, 255, 255, 0.9);
-        border-bottom: 1px solid rgba(19, 29, 43, 0.08);
+        background: rgba(255, 255, 255, 0.95);
+        border-bottom: 1px solid rgba(19, 29, 43, 0.1);
       }
 
       body[data-theme="light"] .departure-row:nth-child(even of .departure-row) {
-        background: rgba(246, 243, 238, 0.9);
+        background: rgba(248, 246, 242, 0.95);
       }
 
       body[data-theme="light"] footer {
-        background: linear-gradient(180deg, transparent 0%, rgba(246, 243, 238, 0.9) 50%);
+        background: linear-gradient(180deg, transparent 0%, rgba(246, 243, 238, 0.95) 50%);
+      }
+
+      body[data-theme="light"] .filter-chip {
+        border-color: rgba(19, 29, 43, 0.14);
+        background: rgba(255, 255, 255, 0.85);
+        color: #2f3a46;
+      }
+
+      body[data-theme="light"] .filter-chip.active {
+        background: rgba(79, 182, 198, 0.22);
+        border-color: rgba(79, 182, 198, 0.4);
+        color: #1a2a33;
+      }
+
+      body[data-theme="light"] .theme-toggle {
+        border-color: rgba(19, 29, 43, 0.18);
+        background: rgba(255, 255, 255, 0.85);
+        color: #2f3a46;
+      }
+
+      body[data-theme="light"] .service-badge {
+        border-color: rgba(19, 29, 43, 0.18);
+        color: #2f3a46;
+        background: rgba(255, 255, 255, 0.8);
+      }
+
+      body[data-theme="light"] .time-abs,
+      body[data-theme="light"] .platform,
+      body[data-theme="light"] .min-label {
+        color: #4a5664;
       }
 
       /* ─── Departure Row ─── */
@@ -1554,21 +1522,14 @@
           --gutter: 16px;
           --row-height: 58px;
         }
-        .clock {
-          font-size: 2.2rem;
-        }
         .brand-title {
           font-size: 1.5rem;
         }
         .brand-mark {
           width: 56px;
           height: 56px;
-          border-radius: 50%;
+          border-radius: 14px;
         }
-        .weather-desc {
-          display: none;
-        }
-
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -1582,17 +1543,18 @@
       @media (max-width: 600px) {
         :root {
           --gutter: 12px;
-          --row-height: 54px;
+          --row-height: 58px;
         }
 
         header.hero {
-          padding: 16px var(--gutter) 12px;
+          padding: 10px var(--gutter) 8px;
         }
         .hero-panel {
           flex-direction: column;
           align-items: flex-start;
-          gap: 16px;
-          padding: 18px;
+          gap: 12px;
+          padding: 14px;
+          border-radius: 22px;
         }
         .hero-actions {
           width: 100%;
@@ -1600,37 +1562,22 @@
           flex-wrap: wrap;
           gap: 10px;
         }
-        .clock-card {
-          text-align: left;
-        }
-        .clock {
-          font-size: 1.8rem;
-        }
-        .brand-title {
-          font-size: 1.2rem;
-        }
-        .clock-date {
-          font-size: 0.65rem;
-        }
-
-        .filter-bar-content {
-          flex-direction: column;
-          align-items: stretch;
-          gap: 6px;
-        }
-        .filter-actions {
-          padding: 0 var(--gutter) 10px;
-          justify-content: space-between;
-        }
+        .brand-title { font-size: 1.15rem; }
+        .brand-subtitle { font-size: 0.65rem; letter-spacing: 0.16em; }
+        .brand-plaque { font-size: 0.55rem; padding: 3px 8px; }
+        .brand-mark { width: 52px; height: 52px; border-radius: 12px; }
+        .mark-letter { font-size: 1.5rem; }
+        .mark-gloss { opacity: 0.35; }
+        .theme-toggle { padding: 6px 10px; font-size: 0.68rem; }
 
         .departures-header,
         .departure-row {
-          grid-template-columns: 64px 1fr 44px 72px 56px;
+          grid-template-columns: 88px 1fr 44px 72px 48px;
           padding: 0 8px;
         }
 
         .skeleton-row {
-          grid-template-columns: 64px 1fr 44px 72px 56px;
+          grid-template-columns: 88px 1fr 44px 72px 48px;
           padding: 0 8px;
         }
 
@@ -1639,26 +1586,34 @@
           font-size: 0.72rem;
         }
 
+        .line-cell {
+          gap: 6px;
+        }
+        .pin-btn {
+          width: 18px;
+          height: 18px;
+          font-size: 0.6rem;
+        }
         .line-badge {
           min-width: 36px;
-          height: 24px;
+          height: 22px;
           padding: 0 6px;
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           border-radius: 4px;
         }
 
-        .destination {
-          font-size: 0.85rem;
-        }
+        .destination { font-size: 0.88rem; }
         .time-remaining {
-          font-size: 1.2rem;
+          font-size: 1.15rem;
         }
         .time-abs {
-          font-size: 0.85rem;
+          font-size: 0.8rem;
         }
         .platform {
-          font-size: 0.82rem;
+          font-size: 0.76rem;
         }
+        .delay-badge { font-size: 0.65rem; padding: 2px 5px; }
+        .delay-icon { font-size: 0.7rem; }
         .min-label {
           font-size: 0.55rem;
         }
@@ -1701,15 +1656,6 @@
         .departure-row {
           padding: 0 6px;
         }
-        .weather-widget {
-          padding: 4px 8px;
-        }
-        .weather-icon {
-          font-size: 1.1rem;
-        }
-        .weather-temp {
-          font-size: 0.9rem;
-        }
       }
     </style>
   </head>
@@ -1731,30 +1677,11 @@
             </div>
           </div>
           <div class="hero-actions">
-            <div class="weather-widget" id="weatherWidget">
-              <span class="weather-icon" id="weatherIcon"></span>
-              <div>
-                <div class="weather-temp mono" id="weatherTemp"></div>
-                <div class="weather-desc" id="weatherDesc"></div>
-              </div>
-            </div>
             <button class="theme-toggle" id="themeToggle" aria-label="Theme wechseln">
               <span class="toggle-icon" id="themeIcon">🌙</span>
               <span id="themeLabel">Nacht</span>
             </button>
-            <div class="clock-card">
-              <div class="clock-row">
-                <div class="clock mono" id="clock"></div>
-                <div class="refresh-ring" id="refreshRing" aria-hidden="true">
-                  <svg viewBox="0 0 36 36">
-                    <circle class="ring-bg" cx="18" cy="18" r="15" fill="none" stroke-width="3"></circle>
-                    <circle class="ring-progress" cx="18" cy="18" r="15" fill="none" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="94.2"></circle>
-                  </svg>
-                </div>
-              </div>
-              <div class="clock-date" id="clockDate"></div>
-              <div class="last-updated" id="lastUpdated"></div>
-            </div>
+            <div class="last-updated" id="lastUpdated"></div>
           </div>
         </div>
       </header>
@@ -1916,7 +1843,6 @@
       let errorMessage = null;
       let isLoading = true;
       let activeFilters = new Set();
-      let weatherData = null;
       let favoriteLines = new Set();
       let lastPlatformByKey = new Map();
       let lastUpdatedAt = null;
@@ -2029,79 +1955,6 @@
         return div.innerHTML;
       }
 
-      // ─── Weather ───
-      const WEATHER_CODES = {
-        0: ["☀️", "Klar"],
-        1: ["🌤️", "Heiter"],
-        2: ["⛅", "Bewölkt"],
-        3: ["☁️", "Bedeckt"],
-        45: ["🌫️", "Nebel"],
-        48: ["🌫️", "Reifnebel"],
-        51: ["🌦️", "Nieselregen"],
-        53: ["🌦️", "Nieselregen"],
-        55: ["🌦️", "Nieselregen"],
-        56: ["🌧️", "Gefrierender Niesel"],
-        57: ["🌧️", "Gefrierender Niesel"],
-        61: ["🌧️", "Regen"],
-        63: ["🌧️", "Regen"],
-        65: ["🌧️", "Starkregen"],
-        66: ["🌧️", "Gefrierender Regen"],
-        67: ["🌧️", "Gefrierender Regen"],
-        71: ["❄️", "Schnee"],
-        73: ["❄️", "Schnee"],
-        75: ["❄️", "Starker Schnee"],
-        77: ["❄️", "Schneekörner"],
-        80: ["🌦️", "Schauer"],
-        81: ["🌧️", "Schauer"],
-        82: ["⛈️", "Starke Schauer"],
-        85: ["🌨️", "Schneeschauer"],
-        86: ["🌨️", "Starke Schneeschauer"],
-        95: ["⛈️", "Gewitter"],
-        96: ["⛈️", "Gewitter m. Hagel"],
-        99: ["⛈️", "Gewitter m. Hagel"],
-      };
-
-      function getWeatherAmbientClass(code) {
-        if (code >= 95) return "storm";
-        if (code >= 71 && code <= 77 || code >= 85 && code <= 86) return "snow";
-        if (code >= 61 && code <= 67 || code >= 80 && code <= 82) return "rain";
-        if (code >= 51 && code <= 57) return "drizzle";
-        if (code >= 45 && code <= 48) return "fog";
-        return "";
-      }
-
-      async function fetchWeather() {
-        try {
-          const url =
-            "https://api.open-meteo.com/v1/forecast?latitude=50.7753&longitude=6.0839&current=temperature_2m,weather_code&timezone=Europe%2FBerlin";
-          const res = await fetch(url);
-          const data = await res.json();
-          if (data.current) {
-            weatherData = {
-              temp: Math.round(data.current.temperature_2m),
-              code: data.current.weather_code,
-            };
-            renderWeather();
-          }
-        } catch (e) {}
-      }
-
-      function renderWeather() {
-        if (!weatherData) return;
-        const widget = document.getElementById("weatherWidget");
-        const iconEl = document.getElementById("weatherIcon");
-        const tempEl = document.getElementById("weatherTemp");
-        const descEl = document.getElementById("weatherDesc");
-        const [icon, desc] = WEATHER_CODES[weatherData.code] || ["🌡️", ""];
-        iconEl.textContent = icon;
-        tempEl.textContent = weatherData.temp + "°";
-        descEl.textContent = desc;
-        widget.classList.add("loaded");
-
-        // Update ambient layer
-        const layer = document.getElementById("ambientLayer");
-        layer.className = "ambient-layer " + getWeatherAmbientClass(weatherData.code);
-      }
 
       // ─── Filter Chips ───
       function getVisibleLines() {
@@ -2531,21 +2384,6 @@
         }
       }
 
-      function updateClock() {
-        const now = new Date();
-        document.getElementById("clock").textContent = now.toLocaleTimeString(
-          "de-DE",
-          { hour: "2-digit", minute: "2-digit", second: "2-digit" },
-        );
-        document.getElementById("clockDate").textContent =
-          now.toLocaleDateString("de-DE", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          });
-      }
-
       function updateLastUpdated() {
         const el = document.getElementById("lastUpdated");
         if (!el || !lastUpdatedAt) return;
@@ -2656,12 +2494,8 @@
       // Init
       initThemeToggle();
       setRefreshRing(1);
-      updateClock();
       fetchDepartures();
-      fetchWeather();
-      setInterval(updateClock, 1000);
       setInterval(updateCountdown, 1000);
-      setInterval(fetchWeather, 600000);
     </script>
   </body>
 </html>
