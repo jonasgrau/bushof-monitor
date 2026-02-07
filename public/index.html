@@ -466,6 +466,10 @@
         z-index: 1;
       }
 
+      .theme-toggle .toggle-label {
+        display: none;
+      }
+
       .last-updated {
         font-size: 0.62rem;
         color: var(--text-tertiary);
@@ -1558,8 +1562,11 @@
         }
         .hero-actions {
           width: 100%;
-          align-items: flex-start;
+          align-items: flex-end;
           gap: 4px;
+        }
+        .brand {
+          width: 100%;
         }
         .brand-title { font-size: 1.15rem; }
         .brand-subtitle { font-size: 0.65rem; letter-spacing: 0.16em; }
@@ -1682,7 +1689,7 @@
           <div class="hero-actions">
             <button class="theme-toggle" id="themeToggle" aria-label="Theme wechseln">
               <span class="toggle-icon" id="themeIcon">🌙</span>
-              <span id="themeLabel">Nacht</span>
+              <span id="themeLabel" class="toggle-label">Nacht</span>
             </button>
             <div class="last-updated" id="lastUpdated"></div>
           </div>
